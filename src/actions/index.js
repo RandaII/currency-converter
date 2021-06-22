@@ -6,6 +6,14 @@ const fetchPairValue = (newCurrencyPair) =>{
   }
 }
 
+const addCurrencyValue = (value) =>{
+  return{
+    type: `ADD_CURRENCY_VALUE`,
+    payload: value
+  }
+}
+
 export {
-  fetchPairValue
+  fetchPairValue,
+  addCurrencyValue
 }

@@ -4,14 +4,14 @@ import CurrenciesList from "../currencies-list";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import withCurrencyPairService from "../hoc";
-import {fetchPairValue} from "../../actions";
+import {fetchPairValue, addCurrencyValue} from "../../actions";
 
-
-// ПРОВЕРИТЬ КОД СЕРВИСА, НЕ ЗАБЫТЬ СДЕЛАТЬ КОММИТ, РЕАЛИЗОВАТЬ КОНВЕРТАЦИЮ
+// TODO сделать компонент строку, переписать код компонента
 
 class Converter extends Component {
 
   async componentDidMount() {
+
     const {
       currencyPairService,
       fetchPairValue,
@@ -21,7 +21,8 @@ class Converter extends Component {
       }} = this.props;
 
     // образуем ключ текущей пары
-    this.pair = currentCurrency + convertedCurrency;
+    // this.pair = currentCurrency + convertedCurrency;
+    this.pair = [currentCurrency + convertedCurrency, convertedCurrency + currentCurrency];
 
     // получаем курс текущей пары
     let pairValue = await currencyPairService.getCourse(this.pair);
@@ -30,19 +31,29 @@ class Converter extends Component {
     fetchPairValue(pairValue);
   }
 
+  onInputChange = (value) =>{
+    this.props.addCurrencyValue(value);
+  }
 
   render() {
-    const {currentCurrency, convertedCurrency, exchangeRate} = this.props.currenciesInfo;
+    const {currentCurrency, convertedCurrency, currentCurrencyValue, convertedCurrencyValue} = this.props.currenciesInfo;
+
     return (
       <main className="converter">
 
         <div className="converter__currency-block">
-          <ConverterInputField></ConverterInputField>
+          <ConverterInputField
+            onInputChange={this.onInputChange}
+            currencyValue={currentCurrencyValue}
+            type='currentCurrencyValue'></ConverterInputField>
           <CurrenciesList currency={currentCurrency}></CurrenciesList>
         </div>
 
         <div className="converter__currency-block">
-          <ConverterInputField></ConverterInputField>
+          <ConverterInputField
+            onInputChange={this.onInputChange}
+            currencyValue={convertedCurrencyValue}
+            type='convertedCurrencyValue'></ConverterInputField>
           <CurrenciesList currency={convertedCurrency}></CurrenciesList>
         </div>
 
@@ -53,7 +64,8 @@ class Converter extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-    fetchPairValue: fetchPairValue
+    fetchPairValue: fetchPairValue,
+    addCurrencyValue: addCurrencyValue
   }, dispatch);
 }
 
