@@ -105,17 +105,86 @@ $activeColor: #1cacd4;
       margin-left: 5px;
       position: absolute;
       line-height: $elHeight;
-    }
-    i.active{
-      transform: rotateX(180deg);
-    }
-
-    &--active {
-      border: 1px solid #1cacd4;
+      transition: .2s ease-out;
     }
   }
 
   &__currency-list {
-    display: none;
+    list-style: none;
+    border: $bdStyle;
+    position: absolute;
+    top: 23px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0;
+    box-sizing: border-box;
+    width: 76px;
+    margin-left: -1px;
+    border-radius: 0 $bdRadius $bdRadius $bdRadius;
+    cursor: pointer;
+    z-index: 100;
+
+    &-item{
+      text-align: center;
+      border-bottom: $bdStyle;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      transition: .3s ease-out;
+
+      &:last-child{
+        border-bottom: none;
+      }
+    }
+
+    &--show{
+      animation: showBlock .2s ease-out forwards ;
+    }
+    &--out-border{
+      transform: translateX(-500px);
+    }
+    &--hide{
+      animation: hideBlock .2s ease-out forwards,
+      translate .2s ease-out .2s forwards;
+    }
+  }
+}
+
+
+
+
+
+@keyframes showBlock {
+  from{
+    opacity: 0;
+  }
+  50%{
+    opacity: .5;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+@keyframes hideBlock {
+  from{
+    opacity: 1;
+  }
+  50%{
+    opacity: 0;
+  }
+  99%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 0;
+  }
+}
+@keyframes translate {
+  from{
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(-500px);
   }
 }

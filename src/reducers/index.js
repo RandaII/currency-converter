@@ -13,7 +13,7 @@ const initialState = {
     exchangeRate: ``,
     reverseExchangeRate: ``
   },
-  currencyList:[
+  currencyList: [
     `RUB`,
     `USD`,
     `EUR`,
@@ -22,15 +22,17 @@ const initialState = {
   ]
 };
 
-const reducer = (state = initialState, action) =>{
+const reducer = (state = initialState, action) => {
   switch (action.type) {
+
     case `FETCH_PAIR_VALUE`:
-      return{
+      return {
         ...state,
         currenciesInfo: {
           ...state.currenciesInfo,
           exchangeRate: action.payload[0],
           reverseExchangeRate: action.payload[1],
+          convertedCurrencyValue: state.currenciesInfo.currentCurrencyValue * action.payload[0]
         }
       }
     case `ADD_CURRENCY_VALUE`:
@@ -48,6 +50,15 @@ const reducer = (state = initialState, action) =>{
           [anotherType]: convertedValue
         }
       }
+    case `CHANGE_CURRENCY`:
+      return {
+        ...state,
+        currenciesInfo: {
+          ...state.currenciesInfo,
+          [action.payload.type]: action.payload.value
+        }
+      }
+
     default:
       return state;
   }
@@ -62,7 +73,6 @@ const returnAnotherCurrencyType = (value) => {
 const returnConvertedValue =
   (value, {currenciesInfo}, convertedCurrency) =>
     value ? returnRoundValue(value * currenciesInfo[convertedCurrency]) : ``;
-
 
 
 export default reducer;

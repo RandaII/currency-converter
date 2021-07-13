@@ -8,7 +8,8 @@ const returnCheckedValue = (value) =>{
   }
 
   // проверяем, что после нуля не идет целое число, и срезаем 0 в случае целого числа, а не точки)
-  if (value[0] == `0` && value.length > 1 && value[1] != `.`){
+
+  if (value[0] === `0` && value.length > 1 && value[1] !== `.`){
     value = value.slice(1);
   }
   return value;

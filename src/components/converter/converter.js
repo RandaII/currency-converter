@@ -7,21 +7,55 @@ import withCurrencyPairService from "../hoc";
 import {fetchPairValue, addCurrencyValue} from "../../actions";
 
 // TODO сделать компонент строку, переписать код компонента
+//TODO сделать PropTypes
 
 class Converter extends Component {
 
-  async componentDidMount() {
+  state = {
+    listActive: {
+      currentCurrency:false,
+      convertedCurrency: false
+    }
+  }
 
+  currencyListToggle = async (type) => {
+
+      let anotherType = (type === `currentCurrency`) ? `convertedCurrency` : `currentCurrency`;
+
+      await this.setState((state) => {
+        return {listActive:{
+            [type]: !state.listActive[type],
+            [anotherType]: false
+          }}
+      });
+  }
+
+  backgroundClickListener = ({target}) =>{
+
+    const {currentCurrency, convertedCurrency} = this.state.listActive;
+    const attribute = target.hasAttribute(`data-currency-item`);
+
+    if ((currentCurrency || convertedCurrency) && !attribute){
+        this.setState({
+          listActive:{
+            currentCurrency:false,
+            convertedCurrency: false
+          }
+        });
+    }
+  }
+
+  fetchCurrenciesInfo = async () => {
     const {
       currencyPairService,
       fetchPairValue,
       currenciesInfo: {
-        currentCurrency: currentCurrency,
-        convertedCurrency: convertedCurrency
-      }} = this.props;
+        currentCurrency,
+        convertedCurrency
+      }
+    } = this.props;
 
-    // образуем ключ текущей пары
-    // this.pair = currentCurrency + convertedCurrency;
+    // образуем ключи текущей пары
     this.pair = [currentCurrency + convertedCurrency, convertedCurrency + currentCurrency];
 
     // получаем курс текущей пары
@@ -31,12 +65,19 @@ class Converter extends Component {
     fetchPairValue(pairValue);
   }
 
-  onInputChange = (value) =>{
+  onInputChange = (value) => {
     this.props.addCurrencyValue(value);
+  }
+
+  async componentDidMount() {
+    await this.fetchCurrenciesInfo();
+    document.addEventListener(`click`, this.backgroundClickListener);
   }
 
   render() {
     const {currentCurrency, convertedCurrency, currentCurrencyValue, convertedCurrencyValue} = this.props.currenciesInfo;
+
+    const {currentCurrency: listActiveCurrent, convertedCurrency: listActiveConverted } = this.state.listActive;
 
     return (
       <main className="converter">
@@ -46,7 +87,14 @@ class Converter extends Component {
             onInputChange={this.onInputChange}
             currencyValue={currentCurrencyValue}
             type='currentCurrencyValue'></ConverterInputField>
-          <CurrenciesList currency={currentCurrency}></CurrenciesList>
+
+          <CurrenciesList
+            currency={currentCurrency}
+            type='currentCurrency'
+            fetch={this.fetchCurrenciesInfo}
+            currencyListToggle={this.currencyListToggle}
+            activeStatus={listActiveCurrent}
+            ></CurrenciesList>
         </div>
 
         <div className="converter__currency-block">
@@ -54,7 +102,13 @@ class Converter extends Component {
             onInputChange={this.onInputChange}
             currencyValue={convertedCurrencyValue}
             type='convertedCurrencyValue'></ConverterInputField>
-          <CurrenciesList currency={convertedCurrency}></CurrenciesList>
+
+          <CurrenciesList
+            currency={convertedCurrency}
+            type='convertedCurrency'
+            fetch={this.fetchCurrenciesInfo}
+            currencyListToggle={this.currencyListToggle}
+            activeStatus={listActiveConverted}></CurrenciesList>
         </div>
 
       </main>

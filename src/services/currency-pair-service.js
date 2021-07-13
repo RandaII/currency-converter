@@ -7,6 +7,10 @@ export default class CurrencyPairService  {
 
   async getCourse(pairArray){
 
+    if (pairArray[0] === pairArray[1]){
+      return [1,1];
+    }
+
     // получаем адрес путем конкатенации пути, валютной пары и ключа
     return fetch(this.path + pairArray[0] + `,` + pairArray[1] + this.key)
       .then((response) => response.json())
