@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ConverterInputField from "../converter-input-field";
-import CurrenciesList from "../currencies-list";
+import CurrenciesSelection from "../currencies-selection";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import withCurrencyPairService from "../hoc";
@@ -8,6 +8,7 @@ import {fetchPairValue, addCurrencyValue} from "../../actions";
 
 // TODO сделать компонент строку, переписать код компонента
 //TODO сделать PropTypes
+//TODO переделать очищение инпута
 
 class Converter extends Component {
 
@@ -33,9 +34,9 @@ class Converter extends Component {
   backgroundClickListener = ({target}) =>{
 
     const {currentCurrency, convertedCurrency} = this.state.listActive;
-    const attribute = target.hasAttribute(`data-currency-item`);
+    const attribute = target.getAttribute(`data-element-type`);
 
-    if ((currentCurrency || convertedCurrency) && !attribute){
+    if ((currentCurrency || convertedCurrency) && attribute !== `currency-converter-item`){
         this.setState({
           listActive:{
             currentCurrency:false,
@@ -65,9 +66,8 @@ class Converter extends Component {
     fetchPairValue(pairValue);
   }
 
-  onInputChange = (value) => {
-    this.props.addCurrencyValue(value);
-  }
+  onInputChange = (value) => this.props.addCurrencyValue(value);
+
 
   async componentDidMount() {
     await this.fetchCurrenciesInfo();
@@ -88,13 +88,13 @@ class Converter extends Component {
             currencyValue={currentCurrencyValue}
             type='currentCurrencyValue'></ConverterInputField>
 
-          <CurrenciesList
+          <CurrenciesSelection
             currency={currentCurrency}
             type='currentCurrency'
             fetch={this.fetchCurrenciesInfo}
             currencyListToggle={this.currencyListToggle}
             activeStatus={listActiveCurrent}
-            ></CurrenciesList>
+            ></CurrenciesSelection>
         </div>
 
         <div className="converter__currency-block">
@@ -103,12 +103,12 @@ class Converter extends Component {
             currencyValue={convertedCurrencyValue}
             type='convertedCurrencyValue'></ConverterInputField>
 
-          <CurrenciesList
+          <CurrenciesSelection
             currency={convertedCurrency}
             type='convertedCurrency'
             fetch={this.fetchCurrenciesInfo}
             currencyListToggle={this.currencyListToggle}
-            activeStatus={listActiveConverted}></CurrenciesList>
+            activeStatus={listActiveConverted}></CurrenciesSelection>
         </div>
 
       </main>

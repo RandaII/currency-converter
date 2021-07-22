@@ -1,4 +1,3 @@
-
 @import url("https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css");
 
 $elHeight: 40px;
@@ -7,6 +6,8 @@ $bdRadius: 3px;
 $bdStyle: 1px solid #bdbcbc;
 $fontColor: rgba(52, 49, 49, 0.9);
 $activeColor: #1cacd4;
+$maxBlockWidth: 350px;
+$defaultTransition: .2s ease-out;
 
 .converter {
   font-family: $mainFont;
@@ -15,12 +16,13 @@ $activeColor: #1cacd4;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 350px;
+  max-width: $maxBlockWidth;
   width: 100%;
   max-height: 250px;
   height: 100%;
   padding-top: 50px;
   padding-bottom: 50px;
+  margin-top: 5px;
 
   &__currency-block {
     display: flex;
@@ -71,6 +73,11 @@ $activeColor: #1cacd4;
     cursor: pointer;
     margin-right: 5px;
     opacity: .7;
+    transition: $defaultTransition;
+
+    &:hover{
+      color: $activeColor;
+    }
   }
 
   &__currency-type-block {
@@ -81,86 +88,168 @@ $activeColor: #1cacd4;
       font-size: 24px;
     }
   }
+}
 
-  &__selected-currency {
-    position: absolute;
-    font-family: $mainFont;
-    font-size: 18px;
-    font-weight: 400;
-    text-align: left;
-    line-height: $elHeight;
-    background-color: #fff;
-    color: $fontColor;
-    border: $bdStyle;
-    box-sizing: border-box;
-    height: $elHeight;
-    width: 75px;
-    cursor: pointer;
-    border-top-right-radius: $bdRadius;
-    border-bottom-right-radius: $bdRadius;
-    border-left: none;
-    margin: 0;
+.currency-table{
+  font-family: $mainFont;
+  color: $fontColor;
+  border-collapse: collapse;
+  max-width: $maxBlockWidth;
+  width: 100%;
 
-    i {
-      margin-left: 5px;
-      position: absolute;
-      line-height: $elHeight;
-      transition: .2s ease-out;
+  &__row{
+    padding: 5px;
+
+    th, td{
+      font-weight: 400;
+      border: $bdStyle;
+      text-align: center;
+    }
+    th{
+      height: 39px;
+      box-sizing: border-box;
     }
   }
 
-  &__currency-list {
-    list-style: none;
-    border: $bdStyle;
-    position: absolute;
-    top: 23px;
-    background-color: #fff;
+  &__wrapper{
     display: flex;
-    justify-content: center;
-    flex-direction: column;
-    padding: 0;
-    box-sizing: border-box;
-    width: 76px;
-    margin-left: -1px;
-    border-radius: 0 $bdRadius $bdRadius $bdRadius;
+    position: relative;
+    margin-top: 5px;
+  }
+
+  th,td{
+    padding: 5px;
+  }
+}
+
+.selected-currency-button{
+  position: relative;
+  font-family: $mainFont;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: left;
+  line-height: $elHeight;
+  background-color: #fff;
+  color: $fontColor;
+  border: $bdStyle;
+  box-sizing: border-box;
+  height: $elHeight;
+  width: 75px;
+  cursor: pointer;
+  border-top-right-radius: $bdRadius;
+  border-bottom-right-radius: $bdRadius;
+  border-left: none;
+  margin: 0;
+  transition: $defaultTransition;
+
+  &.active{
+    color: $activeColor;
+
+    i{
+      transform: rotate(180deg);
+    }
+  }
+
+  i{
+    font-size: 24px;
+    margin-left: 5px;
+    position: absolute;
+    line-height: $elHeight;
+    transition: $defaultTransition;
+  }
+}
+
+.currency-list {
+  font-family: $mainFont;
+  color: $fontColor;
+  list-style: none;
+  position: absolute;
+  top: 24px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0;
+  box-sizing: border-box;
+  width: 76px;
+  margin-left: -1px;
+  border-radius: 0 $bdRadius $bdRadius $bdRadius;
+  cursor: pointer;
+  z-index: 100;
+
+  &-item{
+    text-align: center;
+    border: $bdStyle;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    transition: $defaultTransition;
+    margin-top: -1px;
+
+    &:hover{
+      border-color: $activeColor;
+      color: $activeColor;
+      z-index: 50;
+    }
+  }
+
+  &--show{
+    animation: showBlock $defaultTransition forwards ;
+  }
+  &--out-border{
+    transform: translateX(-500px);
+  }
+  &--hide{
+    animation: hideBlock $defaultTransition forwards,
+    translate $defaultTransition .2s forwards;
+  }
+}
+
+
+.switch-buttons{
+  max-width: $maxBlockWidth + 1px;
+  width: 100%;
+  display: flex;
+
+  a{
+    font-family: $mainFont;
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    max-width: $maxBlockWidth /2;
+    width: 100%;
+    height: $elHeight;
+    background-color: #fff;
+    border: $bdStyle;
     cursor: pointer;
-    z-index: 100;
 
-    &-item{
-      text-align: center;
-      border-bottom: $bdStyle;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      transition: .3s ease-out;
+    text-align: center;
+    line-height: $elHeight;
+    text-decoration: none;
+    color: $fontColor;
 
-      &:last-child{
-        border-bottom: none;
-      }
+    &:hover{
+      transition: $defaultTransition;
+      border-color: $activeColor;
     }
-
-    &--show{
-      animation: showBlock .2s ease-out forwards ;
+    &.active{
+      border-color: $activeColor;
+      color: $activeColor;
+      font-weight: 500;
+      z-index: 150;
     }
-    &--out-border{
-      transform: translateX(-500px);
-    }
-    &--hide{
-      animation: hideBlock .2s ease-out forwards,
-      translate .2s ease-out .2s forwards;
+    &:last-child{
+      width: ($maxBlockWidth /2) + 1px;
+      position: relative;
+      right: 1px;
     }
   }
 }
 
 
 
-
-
 @keyframes showBlock {
   from{
     opacity: 0;
-  }
-  50%{
-    opacity: .5;
   }
   100%{
     opacity: 1;
@@ -169,12 +258,6 @@ $activeColor: #1cacd4;
 @keyframes hideBlock {
   from{
     opacity: 1;
-  }
-  50%{
-    opacity: 0;
-  }
-  99%{
-    opacity: 0;
   }
   100%{
     opacity: 0;

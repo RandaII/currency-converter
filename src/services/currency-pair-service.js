@@ -17,6 +17,25 @@ export default class CurrencyPairService  {
       // преобразуем полученый курс в пару массив
       .then((result) =>formatString(result.data, pairArray));
   }
+
+  async getAllCourse(currency, list){
+
+    let pairs = ``;
+    list.map(item =>{
+      pairs += `${currency}${item},`
+    })
+
+    return fetch(this.path + pairs + this.key)
+      .then((response) => response.json())
+      .then((result) =>{
+        for (let key in result.data){
+          result.data[key] = returnRoundValue(Number(result.data[key]));
+        }
+        return result.data;
+      });
+    ;
+  }
+
 }
 
 const formatString = (value, pair) =>{

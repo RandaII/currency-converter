@@ -19,7 +19,11 @@ const initialState = {
     `EUR`,
     `GBP`,
     `BYN`
-  ]
+  ],
+  currencyTable:{
+    values:{},
+    currentCurrency: `USD`
+  }
 };
 
 const reducer = (state = initialState, action) => {
@@ -50,12 +54,28 @@ const reducer = (state = initialState, action) => {
           [anotherType]: convertedValue
         }
       }
+    case `ADD_CURRENCIES_VALUES`:
+      return {
+        ...state,
+        currencyTable:{
+          ...state.currencyTable,
+          values: action.payload
+        }
+      }
     case `CHANGE_CURRENCY`:
       return {
         ...state,
         currenciesInfo: {
           ...state.currenciesInfo,
           [action.payload.type]: action.payload.value
+        }
+      }
+    case `CHOICES_CURRENCY_IN_TABLE`:
+      return {
+        ...state,
+        currencyTable: {
+          ...state.currencyTable,
+          currentCurrency: action.payload
         }
       }
 

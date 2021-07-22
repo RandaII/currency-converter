@@ -2,11 +2,14 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {changeCurrency} from "../../actions";
+import SelectorButton from "../selector-button";
+import CurrencyList from "../currency-list";
 
-// TODO сделать обработку ошибок
+//TODO сделать обработку ошибок
 //TODO сделать отдельную рендер функцию
+//TODO сделать передачу через контекст
 
-class CurrenciesList extends Component {
+class CurrenciesSelection extends Component {
 
   firstMount = true;
 
@@ -25,38 +28,38 @@ class CurrenciesList extends Component {
   render() {
     const {currency, activeStatus, currencyList} = this.props;
 
-    const currencyListItems = currencyList.map((value, index) =>
-      <li className="converter__currency-list-item"
-          onClick={this.sendCurrency}
-          key={index}
-          data-currency-item>{value}
-      </li>);
-
-    let currencyListClasses = `converter__currency-list `;
+    let currencyListClasses = `currency-list `;
 
     if (activeStatus) {
-      currencyListClasses += `converter__currency-list--show`;
+      currencyListClasses += `currency-list--show`;
       }
      else if (!activeStatus && this.firstMount) {
-      currencyListClasses += `converter__currency-list--out-border`;
+      currencyListClasses += `currency-list--out-border`;
       this.firstMount = false;
     } else {
-      currencyListClasses += `converter__currency-list--hide`;
+      currencyListClasses += `currency-list--hide`;
     }
 
-    let currencyListNode = <ul className={currencyListClasses}>{currencyListItems}</ul>;
-
+     const test = React.createContext(`currency-converter-item`);
 
     return (
       <div className="converter__currency-type-block">
-        <button
-          data-currency-item
-          className="converter__selected-currency"
+
+        <SelectorButton
+          dataType="currency-converter-item"
+          className="selected-currency-button"
           onClick={this.toggle}
-          >{currency}
-          <i className="fa--converter fa fa-angle-down" data-currency-item></i>
-        </button>
-        {currencyListNode}
+          activeStatus={activeStatus}>
+          {currency}
+        </SelectorButton>
+
+        <CurrencyList
+          currencyArray={currencyList}
+          className={currencyListClasses}
+          elementType="currency-converter-item"
+          onClick={this.sendCurrency}
+        ></CurrencyList>
+
       </div>
     );
   }
@@ -72,4 +75,4 @@ const mapDispatchToProps = (dispatch) => {
   }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CurrenciesList);
+export default connect(mapStateToProps, mapDispatchToProps)(CurrenciesSelection);
