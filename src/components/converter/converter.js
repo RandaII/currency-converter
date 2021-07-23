@@ -16,7 +16,7 @@ class Converter extends Component {
     listActive: {
       currentCurrency:false,
       convertedCurrency: false
-    }
+    },
   }
 
   currencyListToggle = async (type) => {

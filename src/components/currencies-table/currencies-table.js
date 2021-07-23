@@ -5,6 +5,7 @@ import {bindActionCreators} from "redux";
 import {addCurrenciesValues, choicesCurrencyInTable} from "../../actions";
 import SelectorButton from "../selector-button";
 import CurrencyList from "../currency-list";
+import Spinner from "../spinner";
 
 //TODO переписать код
 
@@ -13,7 +14,8 @@ class CurrenciesTable extends Component {
   firstMount = true;
 
   state = {
-    activeStatus:  false
+    activeStatus:  false,
+    isLoading: true
   }
 
   toggle = () =>{
@@ -24,8 +26,10 @@ class CurrenciesTable extends Component {
 
   sendCurrency = async ({target: {textContent}}) =>{
     this.toggle();
+    this.setState({isLoading: true});
     await this.props.choicesCurrencyInTable(textContent);
     await this.addAllCourses();
+    this.setState({isLoading: false});
   }
 
   addAllCourses = async () =>{
@@ -43,13 +47,14 @@ class CurrenciesTable extends Component {
   async componentDidMount() {
     await this.addAllCourses();
     document.addEventListener(`mousedown`,this.backgroundsListener)
+    this.setState({isLoading: false});
     this.firstMount = false;
   }
 
   render() {
 
     const {currencyList, currencyTable:{currentCurrency}} = this.props;
-    const {activeStatus} = this.state;
+    const {activeStatus, isLoading} = this.state;
 
     let items = currencyList.map((item, i) => {
       if (item !== currentCurrency) {
@@ -69,23 +74,28 @@ class CurrenciesTable extends Component {
     }
     else if (!activeStatus && this.firstMount) {
       currencyListClasses += `currency-list--out-border`;
+
     } else {
       currencyListClasses += `currency-list--hide`;
     }
 
     return (
-      <div className="currency-table__wrapper">
-        <table className="currency-table">
-          <thead>
-          <tr className="currency-table__row">
-            <th>Валюта</th>
-            <th>Цена</th>
-          </tr>
-          </thead>
-          <tbody>
-          {items}
-          </tbody>
-        </table>
+      <div className="currency-table__component">
+        <div className="currency-table__wrapper">
+          <table className="currency-table">
+            <thead>
+            <tr className="currency-table__row">
+              <th>Валюта</th>
+              <th>Цена</th>
+            </tr>
+            </thead>
+            <tbody>
+            {items}
+            </tbody>
+          </table>
+          {isLoading && <Spinner/>}
+        </div>
+
         <div>
 
           <SelectorButton

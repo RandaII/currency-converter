@@ -111,10 +111,16 @@ $defaultTransition: .2s ease-out;
     }
   }
 
-  &__wrapper{
+  &__component{
     display: flex;
     position: relative;
     margin-top: 5px;
+  }
+
+  &__wrapper{
+    max-width: $maxBlockWidth;
+    width: 100%;
+    position: relative;
   }
 
   th,td{
