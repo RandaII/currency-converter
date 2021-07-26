@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import withCurrencyPairService from "../hoc";
 import {fetchPairValue, addCurrencyValue} from "../../actions";
+import ErrorIndicator from "../error-indicator";
 
 // TODO сделать компонент строку, переписать код компонента
 //TODO сделать PropTypes
@@ -17,6 +18,10 @@ class Converter extends Component {
       currentCurrency:false,
       convertedCurrency: false
     },
+    error:{
+      status: false,
+      message: null
+    }
   }
 
   currencyListToggle = async (type) => {
@@ -46,6 +51,15 @@ class Converter extends Component {
     }
   }
 
+  onError = (err) =>{
+    this.setState({
+      error:{
+        status: true,
+        message: err.message
+      }
+    });
+  }
+
   fetchCurrenciesInfo = async () => {
     const {
       currencyPairService,
@@ -60,10 +74,12 @@ class Converter extends Component {
     this.pair = [currentCurrency + convertedCurrency, convertedCurrency + currentCurrency];
 
     // получаем курс текущей пары
-    let pairValue = await currencyPairService.getCourse(this.pair);
+    await currencyPairService.getCourse(this.pair)
+      // отправляем значение в store
+      .then((fetchPairValue)
+      )
+      .catch(this.onError);
 
-    // отправляем значение в store
-    fetchPairValue(pairValue);
   }
 
   onInputChange = (value) => this.props.addCurrencyValue(value);
@@ -78,39 +94,44 @@ class Converter extends Component {
     const {currentCurrency, convertedCurrency, currentCurrencyValue, convertedCurrencyValue} = this.props.currenciesInfo;
 
     const {currentCurrency: listActiveCurrent, convertedCurrency: listActiveConverted } = this.state.listActive;
+    const {status: errorStatus} = this.state.error;
+
+    const converter = <div className="converter__wrapper">
+      <div className="converter__currency-block">
+        <ConverterInputField
+          onInputChange={this.onInputChange}
+          currencyValue={currentCurrencyValue}
+          type='currentCurrencyValue'></ConverterInputField>
+
+        <CurrenciesSelection
+          currency={currentCurrency}
+          type='currentCurrency'
+          fetch={this.fetchCurrenciesInfo}
+          currencyListToggle={this.currencyListToggle}
+          activeStatus={listActiveCurrent}
+        ></CurrenciesSelection>
+      </div>
+
+      <div className="converter__currency-block">
+        <ConverterInputField
+          onInputChange={this.onInputChange}
+          currencyValue={convertedCurrencyValue}
+          type='convertedCurrencyValue'></ConverterInputField>
+
+        <CurrenciesSelection
+          currency={convertedCurrency}
+          type='convertedCurrency'
+          fetch={this.fetchCurrenciesInfo}
+          currencyListToggle={this.currencyListToggle}
+          activeStatus={listActiveConverted}></CurrenciesSelection>
+      </div>
+    </div>;
+
+    const component = (errorStatus) ? <ErrorIndicator/> : converter;
 
     return (
       <main className="converter">
-
-        <div className="converter__currency-block">
-          <ConverterInputField
-            onInputChange={this.onInputChange}
-            currencyValue={currentCurrencyValue}
-            type='currentCurrencyValue'></ConverterInputField>
-
-          <CurrenciesSelection
-            currency={currentCurrency}
-            type='currentCurrency'
-            fetch={this.fetchCurrenciesInfo}
-            currencyListToggle={this.currencyListToggle}
-            activeStatus={listActiveCurrent}
-            ></CurrenciesSelection>
-        </div>
-
-        <div className="converter__currency-block">
-          <ConverterInputField
-            onInputChange={this.onInputChange}
-            currencyValue={convertedCurrencyValue}
-            type='convertedCurrencyValue'></ConverterInputField>
-
-          <CurrenciesSelection
-            currency={convertedCurrency}
-            type='convertedCurrency'
-            fetch={this.fetchCurrenciesInfo}
-            currencyListToggle={this.currencyListToggle}
-            activeStatus={listActiveConverted}></CurrenciesSelection>
-        </div>
-
+        {component}
       </main>
     );
   }

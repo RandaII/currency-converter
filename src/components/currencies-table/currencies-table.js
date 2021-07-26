@@ -6,6 +6,7 @@ import {addCurrenciesValues, choicesCurrencyInTable} from "../../actions";
 import SelectorButton from "../selector-button";
 import CurrencyList from "../currency-list";
 import Spinner from "../spinner";
+import ErrorIndicator from "../error-indicator";
 
 //TODO переписать код
 
@@ -15,7 +16,11 @@ class CurrenciesTable extends Component {
 
   state = {
     activeStatus:  false,
-    isLoading: true
+    isLoading: true,
+    error:{
+      status: false,
+      message: ``
+    }
   }
 
   toggle = () =>{
@@ -26,16 +31,31 @@ class CurrenciesTable extends Component {
 
   sendCurrency = async ({target: {textContent}}) =>{
     this.toggle();
-    this.setState({isLoading: true});
     await this.props.choicesCurrencyInTable(textContent);
     await this.addAllCourses();
-    this.setState({isLoading: false});
+  }
+
+  onError = (err) =>{
+    this.setState({
+      error: {
+        status: true,
+        message: err.message
+      },
+      isLoading:false
+    })
   }
 
   addAllCourses = async () =>{
     const {currencyPairService, currencyList, currencyTable:{currentCurrency}, addCurrenciesValues} = this.props;
-    let values = await currencyPairService.getAllCourse(currentCurrency, currencyList);
-    addCurrenciesValues(values);
+
+    this.setState({isLoading: true});
+
+    await currencyPairService.getAllCourse(currentCurrency, currencyList)
+      .then(addCurrenciesValues)
+      .catch(this.onError);
+
+    // addCurrenciesValues(values);
+    this.setState({isLoading: false});
   }
 
   backgroundsListener = ({target}) =>{
@@ -54,7 +74,7 @@ class CurrenciesTable extends Component {
   render() {
 
     const {currencyList, currencyTable:{currentCurrency}} = this.props;
-    const {activeStatus, isLoading} = this.state;
+    const {activeStatus, isLoading, error} = this.state;
 
     let items = currencyList.map((item, i) => {
       if (item !== currentCurrency) {
@@ -79,21 +99,25 @@ class CurrenciesTable extends Component {
       currencyListClasses += `currency-list--hide`;
     }
 
+    const currencyTable = <table className="currency-table">
+      <thead>
+      <tr className="currency-table__row">
+        <th>Валюта</th>
+        <th>Цена</th>
+      </tr>
+      </thead>
+      <tbody>
+      {items}
+      </tbody>
+    </table>;
+
     return (
       <div className="currency-table__component">
         <div className="currency-table__wrapper">
-          <table className="currency-table">
-            <thead>
-            <tr className="currency-table__row">
-              <th>Валюта</th>
-              <th>Цена</th>
-            </tr>
-            </thead>
-            <tbody>
-            {items}
-            </tbody>
-          </table>
+
+          {(!error.status && !isLoading) && currencyTable}
           {isLoading && <Spinner/>}
+          {error.status && <ErrorIndicator/>}
         </div>
 
         <div>

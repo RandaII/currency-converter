@@ -40,8 +40,6 @@ class CurrenciesSelection extends Component {
       currencyListClasses += `currency-list--hide`;
     }
 
-     const test = React.createContext(`currency-converter-item`);
-
     return (
       <div className="converter__currency-type-block">
 
