@@ -4,6 +4,8 @@ import {bindActionCreators} from "redux";
 import {changeCurrency} from "../../actions";
 import SelectorButton from "../selector-button";
 import CurrencyList from "../currency-list";
+import PropTypes from "prop-types";
+import {PropTypesTemplates as Templates} from "../../utils";
 
 //TODO сделать обработку ошибок
 //TODO сделать отдельную рендер функцию
@@ -21,9 +23,8 @@ class CurrenciesSelection extends Component {
 
     await changeCurrency({type, value});
     fetch();
-    currencyListToggle();
+    currencyListToggle(type);
   }
-
 
   render() {
     const {currency, activeStatus, currencyList} = this.props;
@@ -32,8 +33,7 @@ class CurrenciesSelection extends Component {
 
     if (activeStatus) {
       currencyListClasses += `currency-list--show`;
-      }
-     else if (!activeStatus && this.firstMount) {
+    } else if (!activeStatus && this.firstMount) {
       currencyListClasses += `currency-list--out-border`;
       this.firstMount = false;
     } else {
@@ -45,7 +45,6 @@ class CurrenciesSelection extends Component {
 
         <SelectorButton
           dataType="currency-converter-item"
-          className="selected-currency-button"
           onClick={this.toggle}
           activeStatus={activeStatus}>
           {currency}
@@ -54,14 +53,23 @@ class CurrenciesSelection extends Component {
         <CurrencyList
           currencyArray={currencyList}
           className={currencyListClasses}
-          elementType="currency-converter-item"
-          onClick={this.sendCurrency}
-        ></CurrencyList>
+          dataType="currency-converter-item"
+          onClick={this.sendCurrency}/>
 
       </div>
     );
   }
 }
+
+CurrenciesSelection.propTypes = {
+  currency: PropTypes.oneOf(Templates.currenciesArray).isRequired,
+  type: PropTypes.oneOf([
+    `currentCurrency`,
+    `convertedCurrency`]).isRequired,
+  fetch: PropTypes.func.isRequired,
+  currencyListToggle: PropTypes.func.isRequired,
+  activeStatus: PropTypes.bool.isRequired
+};
 
 const mapStateToProps = ({currencyList}) => {
   return {currencyList};

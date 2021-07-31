@@ -1,35 +1,38 @@
-import React, {Component} from 'react';
-import {returnCheckedValue} from "../../utils";
+import React from 'react';
+import {PropTypesTemplates as Templates, returnCheckedValue} from "../../utils";
+import PropTypes from "prop-types";
 
 //TODO реализовать возможность ввода чисел с запятой
 
-export default class ConverterInputField extends Component {
+const ConverterInputField = ({onInputChange, type, currencyValue}) => {
 
-  onchange = ({target:{value}}) =>{
-    const {onInputChange, type} = this.props;
-    // проверяем поступившее значение
-
+  const onchange = ({target: {value}}) => {
     onInputChange({
       type,
-      value: returnCheckedValue(value) // присваеваем проверенное значение
+      value: returnCheckedValue(value) //проверяем поступившее значение и присваеваем
     });
-
   }
 
-  clearInput = () => this.props.onInputChange({
-      type: this.props.type,
-      value: ``
-    });
+  const clearInput = () => onInputChange({
+    type,
+    value: ``
+  });
 
-  render() {
-
-    const {currencyValue} = this.props;
-
-    return (
-      <div className="converter__input-block">
-        <input type="text" value={currencyValue} onChange={this.onchange} maxLength={15}/>
-        <span onClick={this.clearInput} className="converter__input-clear">&#215;</span>
-      </div>
-    )
-  }
+  return (
+    <div className="converter__input-block">
+      <input type="text"
+             value={currencyValue}
+             onChange={onchange}
+             maxLength={15}/>
+      <span onClick={clearInput} className="converter__input-clear">&#215;</span>
+    </div>
+  )
 }
+
+ConverterInputField.propTypes = {
+  onInputChange: PropTypes.func.isRequired,
+  currencyValue: PropTypes.oneOfType(Templates.emptyStringWithNumber).isRequired,
+  type: PropTypes.oneOf([`currentCurrencyValue`, `convertedCurrencyValue`]).isRequired
+}
+
+export default ConverterInputField;

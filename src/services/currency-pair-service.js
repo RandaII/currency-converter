@@ -1,6 +1,5 @@
 //TODO заменить map на reduce
 
-
 import {returnRoundValue} from "../utils";
 
 export default class CurrencyPairService  {

@@ -1,7 +1,3 @@
-//TODO посмотреть изменения и сделать коммит
-// TODO Обратите внимание, валютные пары можно задавать в любом порядке USDRUB = 56.311 или RUBUSD = 0.01776, посмотреть возможность убрать функцию конвертацию
-// TODO преобразовать структуру state, добавить типы валют
-
 import {returnRoundValue} from "../utils";
 
 const initialState = {
@@ -30,13 +26,19 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
 
     case `FETCH_PAIR_VALUE`:
+
+      const {currentCurrencyValue} = state.currenciesInfo;
+
+      // вычисляем конвертируемое значение и округляем его
+      const convertedCurrencyValue = (currentCurrencyValue) ? returnRoundValue((currentCurrencyValue * action.payload[0])) : ``;
+
       return {
         ...state,
         currenciesInfo: {
           ...state.currenciesInfo,
           exchangeRate: action.payload[0],
           reverseExchangeRate: action.payload[1],
-          convertedCurrencyValue: state.currenciesInfo.currentCurrencyValue * action.payload[0]
+          convertedCurrencyValue
         }
       }
     case `ADD_CURRENCY_VALUE`:
@@ -49,8 +51,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         currenciesInfo: {
           ...state.currenciesInfo,
-
-          [type]: value,
+          [type]: (value) ? +value : ``,
           [anotherType]: convertedValue
         }
       }
@@ -78,7 +79,6 @@ const reducer = (state = initialState, action) => {
           currentCurrency: action.payload
         }
       }
-
     default:
       return state;
   }

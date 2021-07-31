@@ -6,12 +6,31 @@ import {bindActionCreators} from "redux";
 import withCurrencyPairService from "../hoc";
 import {fetchPairValue, addCurrencyValue} from "../../actions";
 import ErrorIndicator from "../error-indicator";
+import PropTypes from "prop-types";
+import {PropTypesTemplates as Templates} from "../../utils";
 
-// TODO сделать компонент строку, переписать код компонента
-//TODO сделать PropTypes
+//TODO сделать компонент строку, переписать код компонента
+//TODO при вводе в инпут не работает точка
+//TODO PropTypes перепроверить
 //TODO переделать очищение инпута
+//TODO переделать `` value на null в reducer
+// TODO посмотреть что можно сделать при размонтировании
 
 class Converter extends Component {
+
+  static propTypes = {
+    addCurrencyValue: PropTypes.func.isRequired,
+    currenciesInfo: PropTypes.shape({
+      convertedCurrency: PropTypes.string.isRequired,
+      convertedCurrencyValue: PropTypes.oneOfType(Templates.emptyStringWithNumber).isRequired,
+      currentCurrency: PropTypes.string.isRequired,
+      currentCurrencyValue: PropTypes.oneOfType(Templates.emptyStringWithNumber).isRequired,
+      exchangeRate: PropTypes.oneOfType(Templates.emptyStringWithNumber).isRequired,
+      reverseExchangeRate: PropTypes.oneOfType(Templates.emptyStringWithNumber).isRequired,
+    }),
+    currencyPairService: PropTypes.object.isRequired,
+    fetchPairValue: PropTypes.func.isRequired
+  }
 
   state = {
     listActive: {
@@ -51,11 +70,11 @@ class Converter extends Component {
     }
   }
 
-  onError = (err) =>{
+  onError = ({message}) =>{
     this.setState({
       error:{
         status: true,
-        message: err.message
+        message
       }
     });
   }
@@ -76,14 +95,11 @@ class Converter extends Component {
     // получаем курс текущей пары
     await currencyPairService.getCourse(this.pair)
       // отправляем значение в store
-      .then((fetchPairValue)
-      )
+      .then((fetchPairValue))
       .catch(this.onError);
-
   }
 
   onInputChange = (value) => this.props.addCurrencyValue(value);
-
 
   async componentDidMount() {
     await this.fetchCurrenciesInfo();
@@ -101,29 +117,28 @@ class Converter extends Component {
         <ConverterInputField
           onInputChange={this.onInputChange}
           currencyValue={currentCurrencyValue}
-          type='currentCurrencyValue'></ConverterInputField>
+          type='currentCurrencyValue'/>
 
         <CurrenciesSelection
           currency={currentCurrency}
           type='currentCurrency'
           fetch={this.fetchCurrenciesInfo}
           currencyListToggle={this.currencyListToggle}
-          activeStatus={listActiveCurrent}
-        ></CurrenciesSelection>
+          activeStatus={listActiveCurrent}/>
       </div>
 
       <div className="converter__currency-block">
         <ConverterInputField
           onInputChange={this.onInputChange}
           currencyValue={convertedCurrencyValue}
-          type='convertedCurrencyValue'></ConverterInputField>
+          type='convertedCurrencyValue'/>
 
         <CurrenciesSelection
           currency={convertedCurrency}
           type='convertedCurrency'
           fetch={this.fetchCurrenciesInfo}
           currencyListToggle={this.currencyListToggle}
-          activeStatus={listActiveConverted}></CurrenciesSelection>
+          activeStatus={listActiveConverted}/>
       </div>
     </div>;
 

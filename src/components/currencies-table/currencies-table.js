@@ -7,10 +7,23 @@ import SelectorButton from "../selector-button";
 import CurrencyList from "../currency-list";
 import Spinner from "../spinner";
 import ErrorIndicator from "../error-indicator";
+import PropTypes from "prop-types";
 
 //TODO переписать код
+//TODO добавить view
 
 class CurrenciesTable extends Component {
+
+  static propTypes = {
+    addCurrenciesValues: PropTypes.func.isRequired,
+    choicesCurrencyInTable: PropTypes.func.isRequired,
+    currencyList: PropTypes.array.isRequired,
+    currencyPairService: PropTypes.object.isRequired,
+    currencyTable: PropTypes.shape({
+      currentCurrency: PropTypes.string.isRequired,
+      values: PropTypes.object.isRequired
+    })
+  };
 
   firstMount = true;
 
@@ -19,13 +32,13 @@ class CurrenciesTable extends Component {
     isLoading: true,
     error:{
       status: false,
-      message: ``
+      message: null
     }
   }
 
   toggle = () =>{
-    this.setState((state) =>{
-      return {activeStatus: !state.activeStatus}
+    this.setState(({activeStatus}) =>{
+      return {activeStatus: !activeStatus}
     });
   }
 
@@ -35,11 +48,11 @@ class CurrenciesTable extends Component {
     await this.addAllCourses();
   }
 
-  onError = (err) =>{
+  onError = ({message}) =>{
     this.setState({
       error: {
         status: true,
-        message: err.message
+        message
       },
       isLoading:false
     })
@@ -54,7 +67,6 @@ class CurrenciesTable extends Component {
       .then(addCurrenciesValues)
       .catch(this.onError);
 
-    // addCurrenciesValues(values);
     this.setState({isLoading: false});
   }
 
@@ -123,7 +135,6 @@ class CurrenciesTable extends Component {
         <div>
 
           <SelectorButton
-            className="selected-currency-button"
             dataType="currency-table-item"
             onClick={this.toggle}
             activeStatus={activeStatus}>{currentCurrency}
@@ -132,7 +143,7 @@ class CurrenciesTable extends Component {
           <CurrencyList
             currencyArray={currencyList}
             onClick={this.sendCurrency}
-            elementType="currency-table-item"
+            dataType="currency-table-item"
             className={currencyListClasses}
           ></CurrencyList>
 

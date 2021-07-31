@@ -6,6 +6,8 @@ import {BrowserRouter as Router, Route, NavLink} from "react-router-dom";
 import * as styles from './app.scss';
 import CurrenciesList from "../currencies-table";
 
+//TODO оформить переключатель в отдельный компонент
+
 const App = ({currencyPairService}) => {
   return (
     <Router>

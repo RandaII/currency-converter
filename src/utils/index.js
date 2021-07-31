@@ -1,5 +1,7 @@
+import PropTypes from "prop-types";
 
 const returnCheckedValue = (value) =>{
+
   const numberRegExp = /^\.|[^\d\.]|\.\d+\.|\.\./gm;
 
   // проверяем на ввод иных символов, кроме чисел и в случае их присутствия, обрезаем строку до прежнего состояния
@@ -17,17 +19,35 @@ const returnCheckedValue = (value) =>{
 
 const returnRoundValue = (value) =>{
   if (value >= 0.1){
-    return value.toFixed(2);
+    return +value.toFixed(2);
   }
   else if (value < 0.1 && value > 0){
-    return value.toFixed(3)
+    return +value.toFixed(3)
+
   }
   else if (value === 0){
     return 0;
   }
 }
 
+const PropTypesTemplates = {
+
+   emptyStringWithNumber: [
+      PropTypes.oneOf([``]),
+      PropTypes.number],
+
+   currenciesArray: [
+    `RUB`,
+    `USD`,
+    `EUR`,
+    `GBP`,
+    `BYN`
+  ]
+}
+
+
 export {
   returnCheckedValue,
-  returnRoundValue
+  returnRoundValue,
+  PropTypesTemplates
 }
