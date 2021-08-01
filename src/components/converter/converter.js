@@ -1,19 +1,15 @@
 import React, {Component} from 'react';
-import ConverterInputField from "../converter-input-field";
-import CurrenciesSelection from "../currencies-selection";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import withCurrencyPairService from "../hoc";
 import {fetchPairValue, addCurrencyValue} from "../../actions";
-import ErrorIndicator from "../error-indicator";
 import PropTypes from "prop-types";
 import {PropTypesTemplates as Templates} from "../../utils";
+import ConverterView from "./converter-view";
 
 //TODO сделать компонент строку, переписать код компонента
 //TODO при вводе в инпут не работает точка
 //TODO PropTypes перепроверить
-//TODO переделать очищение инпута
-//TODO переделать `` value на null в reducer
 // TODO посмотреть что можно сделать при размонтировании
 
 class Converter extends Component {
@@ -111,45 +107,24 @@ class Converter extends Component {
 
     const {currentCurrency: listActiveCurrent, convertedCurrency: listActiveConverted } = this.state.listActive;
     const {status: errorStatus} = this.state.error;
+    const {onInputChange, fetchCurrenciesInfo, currencyListToggle} = this;
 
-    const converter = <div className="converter__wrapper">
-      <div className="converter__currency-block">
-        <ConverterInputField
-          onInputChange={this.onInputChange}
-          currencyValue={currentCurrencyValue}
-          type='currentCurrencyValue'/>
+    const properties = {
+      onInputChange,
+      fetchCurrenciesInfo,
+      currencyListToggle,
+      currentCurrency,
+      currentCurrencyValue,
+      convertedCurrency,
+      convertedCurrencyValue,
+      listActiveCurrent,
+      listActiveConverted,
+      errorStatus
+    }
 
-        <CurrenciesSelection
-          currency={currentCurrency}
-          type='currentCurrency'
-          fetch={this.fetchCurrenciesInfo}
-          currencyListToggle={this.currencyListToggle}
-          activeStatus={listActiveCurrent}/>
-      </div>
-
-      <div className="converter__currency-block">
-        <ConverterInputField
-          onInputChange={this.onInputChange}
-          currencyValue={convertedCurrencyValue}
-          type='convertedCurrencyValue'/>
-
-        <CurrenciesSelection
-          currency={convertedCurrency}
-          type='convertedCurrency'
-          fetch={this.fetchCurrenciesInfo}
-          currencyListToggle={this.currencyListToggle}
-          activeStatus={listActiveConverted}/>
-      </div>
-    </div>;
-
-    const component = (errorStatus) ? <ErrorIndicator/> : converter;
-
-    return (
-      <main className="converter">
-        {component}
-      </main>
-    );
+    return <ConverterView {...properties}/>;
   }
+
 }
 
 const mapDispatchToProps = (dispatch) => {
