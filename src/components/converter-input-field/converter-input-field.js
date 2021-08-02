@@ -7,6 +7,9 @@ import PropTypes from "prop-types";
 const ConverterInputField = ({onInputChange, type, currencyValue}) => {
 
   const onchange = ({target: {value}}) => {
+
+    value = returnCheckedValue(value);
+
     onInputChange({
       type,
       value: returnCheckedValue(value) //проверяем поступившее значение и присваеваем
@@ -31,7 +34,7 @@ const ConverterInputField = ({onInputChange, type, currencyValue}) => {
 
 ConverterInputField.propTypes = {
   onInputChange: PropTypes.func.isRequired,
-  currencyValue: PropTypes.oneOfType(Templates.emptyStringWithNumber).isRequired,
+  currencyValue: PropTypes.oneOfType(Templates.stringWithNumber).isRequired,
   type: PropTypes.oneOf([`currentCurrencyValue`, `convertedCurrencyValue`]).isRequired
 }
 

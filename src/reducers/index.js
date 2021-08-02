@@ -1,3 +1,5 @@
+// TODO вынести в отдельные компоненты редьюсеры
+
 import {returnRoundValue} from "../utils";
 
 const initialState = {
@@ -51,7 +53,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         currenciesInfo: {
           ...state.currenciesInfo,
-          [type]: (value) ? +value : ``,
+          [type]: (value) ? value : ``,
           [anotherType]: convertedValue
         }
       }
@@ -92,7 +94,7 @@ const returnAnotherCurrencyType = (value) => {
 
 const returnConvertedValue =
   (value, {currenciesInfo}, convertedCurrency) =>
-    value ? returnRoundValue(value * currenciesInfo[convertedCurrency]) : ``;
+    value ? returnRoundValue(+value * currenciesInfo[convertedCurrency]) : ``;
 
 
 export default reducer;

@@ -4,7 +4,7 @@ import SelectorButton from "../selector-button";
 import CurrencyList from "../currency-list";
 import React from "react";
 
-const CurrenciesTableView = ({ currencyList,
+const currenciesTableView = ({ currencyList,
                                currentCurrency,
                                currenciesValue,
                                activeStatus,
@@ -71,11 +71,11 @@ const CurrenciesTableView = ({ currencyList,
             onClick={sendCurrency}
             dataType="currency-table-item"
             className={currencyListClasses}
-          ></CurrencyList>
+          />
 
         </div>
       </div>
     );
 }
 
-export default CurrenciesTableView;
+export default currenciesTableView;

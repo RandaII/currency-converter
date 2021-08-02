@@ -1,16 +1,14 @@
-import React, {Component} from 'react';
+import {Component} from 'react';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import withCurrencyPairService from "../hoc";
 import {fetchPairValue, addCurrencyValue} from "../../actions";
 import PropTypes from "prop-types";
 import {PropTypesTemplates as Templates} from "../../utils";
-import ConverterView from "./converter-view";
+import converterView from "./converter-view";
 
-//TODO сделать компонент строку, переписать код компонента
-//TODO при вводе в инпут не работает точка
 //TODO PropTypes перепроверить
-// TODO посмотреть что можно сделать при размонтировании
+//TODO посмотреть что можно сделать при размонтировании
 
 class Converter extends Component {
 
@@ -18,11 +16,11 @@ class Converter extends Component {
     addCurrencyValue: PropTypes.func.isRequired,
     currenciesInfo: PropTypes.shape({
       convertedCurrency: PropTypes.string.isRequired,
-      convertedCurrencyValue: PropTypes.oneOfType(Templates.emptyStringWithNumber).isRequired,
+      convertedCurrencyValue: PropTypes.oneOfType(Templates.stringWithNumber).isRequired,
       currentCurrency: PropTypes.string.isRequired,
-      currentCurrencyValue: PropTypes.oneOfType(Templates.emptyStringWithNumber).isRequired,
-      exchangeRate: PropTypes.oneOfType(Templates.emptyStringWithNumber).isRequired,
-      reverseExchangeRate: PropTypes.oneOfType(Templates.emptyStringWithNumber).isRequired,
+      currentCurrencyValue: PropTypes.oneOfType(Templates.stringWithNumber).isRequired,
+      exchangeRate: PropTypes.oneOfType(Templates.stringWithNumber).isRequired,
+      reverseExchangeRate: PropTypes.oneOfType(Templates.stringWithNumber).isRequired,
     }),
     currencyPairService: PropTypes.object.isRequired,
     fetchPairValue: PropTypes.func.isRequired
@@ -122,7 +120,8 @@ class Converter extends Component {
       errorStatus
     }
 
-    return <ConverterView {...properties}/>;
+    return converterView({...properties})
+
   }
 
 }

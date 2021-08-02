@@ -1,13 +1,10 @@
-import React, {Component} from "react";
+import {Component} from "react";
 import {connect} from "react-redux";
 import withCurrencyPairService from "../hoc";
 import {bindActionCreators} from "redux";
 import {addCurrenciesValues, choicesCurrencyInTable} from "../../actions";
 import PropTypes from "prop-types";
-import CurrenciesTableView from "./currencies-table-view";
-
-//TODO переписать код
-//TODO добавить view
+import currenciesTableView from "./currencies-table-view";
 
 class CurrenciesTable extends Component {
 
@@ -52,7 +49,7 @@ class CurrenciesTable extends Component {
         message
       },
       isLoading: false
-    })
+    });
   }
 
   addAllCourses = async () => {
@@ -97,7 +94,7 @@ class CurrenciesTable extends Component {
       toggle,
       sendCurrency
     }
-    return <CurrenciesTableView {...properties}/>
+    return currenciesTableView({...properties});
   }
 }
 

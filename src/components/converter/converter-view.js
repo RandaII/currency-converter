@@ -3,7 +3,8 @@ import CurrenciesSelection from "../currencies-selection";
 import ErrorIndicator from "../error-indicator";
 import React from "react";
 
-const ConverterView = ({ onInputChange,
+const converterView = ({
+                         onInputChange,
                          fetchCurrenciesInfo,
                          currencyListToggle,
                          currentCurrency,
@@ -12,50 +13,51 @@ const ConverterView = ({ onInputChange,
                          convertedCurrencyValue,
                          listActiveCurrent,
                          listActiveConverted,
-                         errorStatus}) =>{
+                         errorStatus
+                       }) => {
 
   let component;
 
-  if (errorStatus){
+  if (errorStatus) {
     component = <ErrorIndicator/>;
-  }
-  else {
-    component = <div className="converter__wrapper">
-      <div className="converter__currency-block">
-        <ConverterInputField
-          onInputChange={onInputChange}
-          currencyValue={currentCurrencyValue}
-          type='currentCurrencyValue'/>
+  } else {
 
-        <CurrenciesSelection
-          currency={currentCurrency}
-          type='currentCurrency'
-          fetch={fetchCurrenciesInfo}
-          currencyListToggle={currencyListToggle}
-          activeStatus={listActiveCurrent}/>
+    component =
+      <div className="converter__wrapper">
+        <div className="converter__currency-block">
+          <ConverterInputField
+            onInputChange={onInputChange}
+            currencyValue={currentCurrencyValue}
+            type='currentCurrencyValue'/>
+
+          <CurrenciesSelection
+            currency={currentCurrency}
+            type='currentCurrency'
+            fetch={fetchCurrenciesInfo}
+            currencyListToggle={currencyListToggle}
+            activeStatus={listActiveCurrent}/>
+        </div>
+
+        <div className="converter__currency-block">
+          <ConverterInputField
+            onInputChange={onInputChange}
+            currencyValue={convertedCurrencyValue}
+            type='convertedCurrencyValue'/>
+
+          <CurrenciesSelection
+            currency={convertedCurrency}
+            type='convertedCurrency'
+            fetch={fetchCurrenciesInfo}
+            currencyListToggle={currencyListToggle}
+            activeStatus={listActiveConverted}/>
+        </div>
       </div>
-
-      <div className="converter__currency-block">
-        <ConverterInputField
-          onInputChange={onInputChange}
-          currencyValue={convertedCurrencyValue}
-          type='convertedCurrencyValue'/>
-
-        <CurrenciesSelection
-          currency={convertedCurrency}
-          type='convertedCurrency'
-          fetch={fetchCurrenciesInfo}
-          currencyListToggle={currencyListToggle}
-          activeStatus={listActiveConverted}/>
-      </div>
-    </div>;
   }
 
-    return (
-      <main className="converter">
-        {component}
-      </main>
-    );
+  return (<main className="converter">
+      {component}
+    </main>
+  );
 }
 
-export default ConverterView;
+export default converterView;

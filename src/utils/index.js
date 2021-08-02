@@ -32,9 +32,10 @@ const returnRoundValue = (value) =>{
 
 const PropTypesTemplates = {
 
-   emptyStringWithNumber: [
-      PropTypes.oneOf([``]),
-      PropTypes.number],
+   stringWithNumber: [
+      PropTypes.string,
+      PropTypes.number
+   ],
 
    currenciesArray: [
     `RUB`,
@@ -44,7 +45,6 @@ const PropTypesTemplates = {
     `BYN`
   ]
 }
-
 
 export {
   returnCheckedValue,
