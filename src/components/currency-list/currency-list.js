@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import {PropTypesTemplates as Templates} from "../../utils";
 
+import "./currency-list.scss";
+
 const CurrencyList = ({currencyArray, className, dataType, onClick}) => {
 
   const currencyListItems = currencyArray.map((value, index) =>

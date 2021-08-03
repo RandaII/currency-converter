@@ -2,6 +2,8 @@ import React from 'react';
 import {PropTypesTemplates as Templates, returnCheckedValue} from "../../utils";
 import PropTypes from "prop-types";
 
+import "./converter-input-field.scss"
+
 //TODO реализовать возможность ввода чисел с запятой
 
 const ConverterInputField = ({onInputChange, type, currencyValue}) => {

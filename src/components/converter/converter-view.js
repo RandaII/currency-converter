@@ -3,6 +3,8 @@ import CurrenciesSelection from "../currencies-selection";
 import ErrorIndicator from "../error-indicator";
 import React from "react";
 
+import "./converter.scss";
+
 const converterView = ({
                          onInputChange,
                          fetchCurrenciesInfo,

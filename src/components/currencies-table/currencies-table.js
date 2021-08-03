@@ -73,7 +73,6 @@ class CurrenciesTable extends Component {
   async componentDidMount() {
     await this.addAllCourses();
     document.addEventListener(`mousedown`, this.backgroundsListener)
-    this.setState({isLoading: false});
     this.firstMount = false;
   }
 

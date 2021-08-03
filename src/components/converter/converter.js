@@ -8,7 +8,6 @@ import {PropTypesTemplates as Templates} from "../../utils";
 import converterView from "./converter-view";
 
 //TODO PropTypes перепроверить
-//TODO посмотреть что можно сделать при размонтировании
 
 class Converter extends Component {
 
@@ -86,6 +85,8 @@ class Converter extends Component {
     // образуем ключи текущей пары
     this.pair = [currentCurrency + convertedCurrency, convertedCurrency + currentCurrency];
 
+
+
     // получаем курс текущей пары
     await currencyPairService.getCourse(this.pair)
       // отправляем значение в store
@@ -121,7 +122,6 @@ class Converter extends Component {
     }
 
     return converterView({...properties})
-
   }
 
 }

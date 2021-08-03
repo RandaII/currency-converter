@@ -1,0 +1,24 @@
+@keyframes showBlock {
+  from{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+@keyframes hideBlock {
+  from{
+    opacity: 1;
+  }
+  100%{
+    opacity: 0;
+  }
+}
+@keyframes translate {
+  from{
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(-500px);
+  }
+}

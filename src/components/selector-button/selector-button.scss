@@ -1,0 +1,39 @@
+@import "../../styles/variables";
+@import "../../styles/font-awesome";
+
+.selected-currency-button{
+  position: relative;
+  right: 1px;
+  font-family: $mainFont;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: left;
+  width: 75px;
+  height: $elHeight;
+  line-height: $elHeight;
+  background-color: #fff;
+  color: $fontColor;
+  border: $bdStyle;
+  box-sizing: border-box;
+  border-top-right-radius: $bdRadius;
+  border-bottom-right-radius: $bdRadius;
+  margin: 0;
+  transition: $defaultTransition;
+  cursor: pointer;
+
+  &.active{
+    color: $activeColor;
+
+    i{
+      transform: rotate(180deg);
+    }
+  }
+
+  i{
+    font-size: 24px;
+    margin-left: 5px;
+    position: absolute;
+    line-height: $elHeight;
+    transition: $defaultTransition;
+  }
+}

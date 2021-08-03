@@ -1,0 +1,40 @@
+@import "../../styles/variables";
+
+.currency-table{
+  font-family: $mainFont;
+  color: $fontColor;
+  max-width: $maxBlockWidth;
+  width: 100%;
+  border-collapse: collapse;
+
+  &__row{
+    padding: 5px;
+
+    th, td{
+      font-weight: 400;
+      border: $bdStyle;
+      text-align: center;
+      font-size: 16px;
+    }
+    th{
+      height: 39px;
+      box-sizing: border-box;
+    }
+  }
+
+  &__component{
+    display: flex;
+    position: relative;
+    margin-top: 5px;
+  }
+
+  &__wrapper{
+    max-width: $maxBlockWidth;
+    width: 100%;
+    position: relative;
+  }
+
+  th,td{
+    padding: 5px;
+  }
+}

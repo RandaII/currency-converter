@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import {PropTypesTemplates as Templates} from "../../utils";
 
+import "./selector-button.scss";
+
 const SelectorButton = ({activeStatus, dataType, onClick, children}) =>{
 
   let buttonClassname = `selected-currency-button`;

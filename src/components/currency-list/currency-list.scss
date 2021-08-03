@@ -1,0 +1,47 @@
+@import "../../styles/variables";
+@import "../../styles/animations";
+
+.currency-list {
+  font-family: $mainFont;
+  color: $fontColor;
+  background-color: #fff;
+  list-style: none;
+  position: absolute;
+  top: 24px;
+  width: 76px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 0;
+  margin-left: -1px;
+  border-radius: 0 $bdRadius $bdRadius $bdRadius;
+  cursor: pointer;
+  z-index: 100;
+
+  &-item{
+    text-align: center;
+    border: $bdStyle;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    transition: $defaultTransition;
+    margin-top: -1px;
+
+    &:hover{
+      border-color: $activeColor;
+      color: $activeColor;
+      z-index: 50;
+    }
+  }
+
+  &--show{
+    animation: showBlock $defaultTransition forwards ;
+  }
+  &--out-border{
+    transform: translateX(-500px);
+  }
+  &--hide{
+    animation: hideBlock $defaultTransition forwards,
+    translate $defaultTransition .2s forwards;
+  }
+}

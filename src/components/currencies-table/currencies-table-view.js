@@ -4,6 +4,8 @@ import SelectorButton from "../selector-button";
 import CurrencyList from "../currency-list";
 import React from "react";
 
+import "./currencies-table.scss";
+
 const currenciesTableView = ({ currencyList,
                                currentCurrency,
                                currenciesValue,

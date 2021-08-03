@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {changeCurrency} from "../../actions";
@@ -7,19 +7,36 @@ import CurrencyList from "../currency-list";
 import PropTypes from "prop-types";
 import {PropTypesTemplates as Templates} from "../../utils";
 
-//TODO сделать передачу через контекст
+import "./currencies-selection.scss";
 
-const CurrenciesSelection = ({currencyListToggle, type, changeCurrency, fetch, currency, activeStatus, currencyList}) =>{
-  let firstMount = true;
+class CurrenciesSelection extends Component{
 
-  const toggle = () => currencyListToggle(type);
+  static propTypes = {
+    currency: PropTypes.oneOf(Templates.currenciesArray).isRequired,
+    type: PropTypes.oneOf([
+      `currentCurrency`,
+      `convertedCurrency`]).isRequired,
+    fetch: PropTypes.func.isRequired,
+    currencyListToggle: PropTypes.func.isRequired,
+    activeStatus: PropTypes.bool.isRequired
+  };
 
-  const sendCurrency = async ({target: {textContent: value}}) => {
+  firstMount = true;
+
+  toggle = () => this.props.currencyListToggle(this.props.type);
+
+  sendCurrency = async ({target: {textContent: value}}) => {
+
+    const {changeCurrency, type, fetch, currencyListToggle} = this.props;
 
     await changeCurrency({type, value});
     fetch();
     currencyListToggle(type);
   }
+
+  render(){
+    const {activeStatus, currency, currencyList} = this.props;
+    const {firstMount, toggle, sendCurrency} = this;
 
     let currencyListClasses = `currency-list `;
 
@@ -27,7 +44,7 @@ const CurrenciesSelection = ({currencyListToggle, type, changeCurrency, fetch, c
       currencyListClasses += `currency-list--show`;
     } else if (!activeStatus && firstMount) {
       currencyListClasses += `currency-list--out-border`;
-      firstMount = false;
+      this.firstMount = false;
     } else {
       currencyListClasses += `currency-list--hide`;
     }
@@ -50,17 +67,8 @@ const CurrenciesSelection = ({currencyListToggle, type, changeCurrency, fetch, c
 
       </div>
     );
+  }
 }
-
-CurrenciesSelection.propTypes = {
-  currency: PropTypes.oneOf(Templates.currenciesArray).isRequired,
-  type: PropTypes.oneOf([
-    `currentCurrency`,
-    `convertedCurrency`]).isRequired,
-  fetch: PropTypes.func.isRequired,
-  currencyListToggle: PropTypes.func.isRequired,
-  activeStatus: PropTypes.bool.isRequired
-};
 
 const mapStateToProps = ({currencyList}) => {
   return {currencyList};

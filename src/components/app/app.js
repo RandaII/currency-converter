@@ -1,21 +1,14 @@
 import React from 'react';
 import Converter from "../converter";
-import withCurrencyPairService from "../hoc";
-import {BrowserRouter as Router, Route, NavLink} from "react-router-dom";
-
-import * as styles from './app.scss';
 import CurrenciesList from "../currencies-table";
+import {BrowserRouter as Router, Route} from "react-router-dom";
+import SwitchButtons from "../switch-buttons";
 
-//TODO оформить переключатель в отдельный компонент
-
-const App = ({currencyPairService}) => {
+const App = () => {
   return (
     <Router>
-      <div>
-        <div className="switch-buttons">
-          <NavLink to="/" activeClassName="active" exact>Конвертер</NavLink>
-          <NavLink to="/currencies-table" activeClassName="active">Таблица валют</NavLink>
-        </div>
+      <div className="currencies-app">
+        <SwitchButtons/>
         <Route path="/" component={Converter} exact></Route>
         <Route path="/currencies-table" component={CurrenciesList}></Route>
       </div>
@@ -23,5 +16,4 @@ const App = ({currencyPairService}) => {
   );
 }
 
-
-export default withCurrencyPairService()(App);
+export default App;
