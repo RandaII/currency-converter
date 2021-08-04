@@ -17,6 +17,7 @@ class CurrenciesSelection extends Component{
       `currentCurrency`,
       `convertedCurrency`]).isRequired,
     fetch: PropTypes.func.isRequired,
+    changeCurrency: PropTypes.func.isRequired,
     currencyListToggle: PropTypes.func.isRequired,
     activeStatus: PropTypes.bool.isRequired
   };

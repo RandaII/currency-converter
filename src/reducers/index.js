@@ -96,5 +96,4 @@ const returnConvertedValue =
   (value, {currenciesInfo}, convertedCurrency) =>
     value ? returnRoundValue(+value * currenciesInfo[convertedCurrency]) : ``;
 
-
 export default reducer;

@@ -2,9 +2,9 @@ import PropTypes from "prop-types";
 
 const returnCheckedValue = (value) =>{
 
-  const numberRegExp = /^\.|[^\d\.]|\.\d+\.|\.\./gm;
+  const numberRegExp = /^\.|^,|[^\d\.,]|[\.,]\d+[\.,]|([\.,]{2})/gm;
 
-  // проверяем на ввод иных символов, кроме чисел и в случае их присутствия, обрезаем строку до прежнего состояния
+  // проверяем на ввод иных символов, кроме чисел, точки и запятой, в случае их присутствия, обрезаем строку до прежнего состояния
   if (numberRegExp.test(value)){
     return value.slice(0, (value.length - 1));
   }
@@ -13,6 +13,12 @@ const returnCheckedValue = (value) =>{
 
   if (value[0] === `0` && value.length > 1 && value[1] !== `.`){
     value = value.slice(1);
+  }
+
+  // конвертация запятой в точку
+  const commaIndex = value.indexOf(`,`);
+  if (commaIndex !== -1){
+    value = value.slice(0, commaIndex) + `.` + value.slice(commaIndex + 1);
   }
   return value;
 }

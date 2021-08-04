@@ -7,8 +7,6 @@ import PropTypes from "prop-types";
 import {PropTypesTemplates as Templates} from "../../utils";
 import converterView from "./converter-view";
 
-//TODO PropTypes перепроверить
-
 class Converter extends Component {
 
   static propTypes = {

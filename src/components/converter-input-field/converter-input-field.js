@@ -10,8 +10,6 @@ const ConverterInputField = ({onInputChange, type, currencyValue}) => {
 
   const onchange = ({target: {value}}) => {
 
-    value = returnCheckedValue(value);
-
     onInputChange({
       type,
       value: returnCheckedValue(value) //проверяем поступившее значение и присваеваем
