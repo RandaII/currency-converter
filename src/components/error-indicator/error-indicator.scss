@@ -1,7 +1,7 @@
 @import "../../styles/variables";
 
 .error-indicator{
-  position: absolute;
+  position: relative;
   top: 0;
   max-width: $maxBlockWidth;
   width: 100%;

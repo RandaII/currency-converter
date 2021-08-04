@@ -5,8 +5,10 @@ import CurrencyList from "../currency-list";
 import React from "react";
 
 import "./currencies-table.scss";
+import ErrorBoundary from "../error-boundary";
 
-const currenciesTableView = ({ currencyList,
+const currenciesTableView = ({
+                               currencyList,
                                currentCurrency,
                                currenciesValue,
                                activeStatus,
@@ -14,44 +16,45 @@ const currenciesTableView = ({ currencyList,
                                error,
                                firstMount,
                                toggle,
-                               sendCurrency}) =>{
+                               sendCurrency
+                             }) => {
 
-    let items = currencyList.map((item, i) => {
-      if (item !== currentCurrency) {
-        let pair = currentCurrency + item;
+  let items = currencyList.map((item, i) => {
+    if (item !== currentCurrency) {
+      let pair = currentCurrency + item;
 
-        return (<tr className="currency-table__row" key={i}>
-          <td>{currentCurrency}/{item}</td>
-          <td>{currenciesValue[pair]}</td>
-        </tr>);
-      }
-    });
-
-    let currencyListClasses = `currency-list `;
-
-    if (activeStatus) {
-      currencyListClasses += `currency-list--show`;
+      return (<tr className="currency-table__row" key={i}>
+        <td>{currentCurrency}/{item}</td>
+        <td>{currenciesValue[pair]}</td>
+      </tr>);
     }
-    else if (!activeStatus && firstMount) {
-      currencyListClasses += `currency-list--out-border`;
+  });
 
-    } else {
-      currencyListClasses += `currency-list--hide`;
-    }
+  let currencyListClasses = `currency-list `;
 
-    const currencyTable = <table className="currency-table">
-      <thead>
-      <tr className="currency-table__row">
-        <th>Валюта</th>
-        <th>Цена</th>
-      </tr>
-      </thead>
-      <tbody>
-      {items}
-      </tbody>
-    </table>;
+  if (activeStatus) {
+    currencyListClasses += `currency-list--show`;
+  } else if (!activeStatus && firstMount) {
+    currencyListClasses += `currency-list--out-border`;
 
-    return (
+  } else {
+    currencyListClasses += `currency-list--hide`;
+  }
+
+  const currencyTable = <table className="currency-table">
+    <thead>
+    <tr className="currency-table__row">
+      <th>Валюта</th>
+      <th>Цена</th>
+    </tr>
+    </thead>
+    <tbody>
+    {items}
+    </tbody>
+  </table>;
+
+  return (
+    <ErrorBoundary>
       <div className="currency-table__component">
         <div className="currency-table__wrapper">
 
@@ -77,7 +80,8 @@ const currenciesTableView = ({ currencyList,
 
         </div>
       </div>
-    );
+    </ErrorBoundary>
+  );
 }
 
 export default currenciesTableView;

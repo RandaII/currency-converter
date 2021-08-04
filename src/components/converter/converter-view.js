@@ -4,6 +4,7 @@ import ErrorIndicator from "../error-indicator";
 import React from "react";
 
 import "./converter.scss";
+import ErrorBoundary from "../error-boundary";
 
 const converterView = ({
                          onInputChange,
@@ -56,9 +57,12 @@ const converterView = ({
       </div>
   }
 
-  return (<main className="converter">
-      {component}
-    </main>
+  return (
+    <ErrorBoundary>
+      <main className="converter">
+        {component}
+      </main>
+    </ErrorBoundary>
   );
 }
 
