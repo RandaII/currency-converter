@@ -52,8 +52,20 @@ const PropTypesTemplates = {
   ]
 }
 
+const returnAnotherCurrencyType = (value) => {
+  if (value === `currentCurrencyValue`)
+    return [`convertedCurrencyValue`, `exchangeRate`];
+  else return [`currentCurrencyValue`, `reverseExchangeRate`];
+}
+
+const returnConvertedValue =
+  (value, state, convertedCurrency) =>
+    value ? returnRoundValue(+value * state[convertedCurrency]) : ``;
+
 export {
   returnCheckedValue,
   returnRoundValue,
+  returnAnotherCurrencyType,
+  returnConvertedValue,
   PropTypesTemplates
 }

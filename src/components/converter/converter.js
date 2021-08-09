@@ -11,7 +11,7 @@ class Converter extends Component {
 
   static propTypes = {
     addCurrencyValue: PropTypes.func.isRequired,
-    currenciesInfo: PropTypes.shape({
+    converter: PropTypes.shape({
       convertedCurrency: PropTypes.string.isRequired,
       convertedCurrencyValue: PropTypes.oneOfType(Templates.stringWithNumber).isRequired,
       currentCurrency: PropTypes.string.isRequired,
@@ -24,7 +24,7 @@ class Converter extends Component {
   }
 
   state = {
-    listActive: {
+    activeList: {
       currentCurrency:false,
       convertedCurrency: false
     },
@@ -39,8 +39,8 @@ class Converter extends Component {
       let anotherType = (type === `currentCurrency`) ? `convertedCurrency` : `currentCurrency`;
 
       await this.setState((state) => {
-        return {listActive:{
-            [type]: !state.listActive[type],
+        return {activeList:{
+            [type]: !state.activeList[type],
             [anotherType]: false
           }}
       });
@@ -48,12 +48,12 @@ class Converter extends Component {
 
   backgroundClickListener = ({target}) =>{
 
-    const {currentCurrency, convertedCurrency} = this.state.listActive;
+    const {currentCurrency, convertedCurrency} = this.state.activeList;
     const attribute = target.getAttribute(`data-element-type`);
 
     if ((currentCurrency || convertedCurrency) && attribute !== `currency-converter-item`){
         this.setState({
-          listActive:{
+          activeList:{
             currentCurrency:false,
             convertedCurrency: false
           }
@@ -74,7 +74,7 @@ class Converter extends Component {
     const {
       currencyPairService,
       fetchPairValue,
-      currenciesInfo: {
+      converter: {
         currentCurrency,
         convertedCurrency
       }
@@ -82,8 +82,6 @@ class Converter extends Component {
 
     // образуем ключи текущей пары
     this.pair = [currentCurrency + convertedCurrency, convertedCurrency + currentCurrency];
-
-
 
     // получаем курс текущей пары
     await currencyPairService.getCourse(this.pair)
@@ -100,28 +98,26 @@ class Converter extends Component {
   }
 
   render() {
-    const {currentCurrency, convertedCurrency, currentCurrencyValue, convertedCurrencyValue} = this.props.currenciesInfo;
+    const {currentCurrency, convertedCurrency, currentCurrencyValue, convertedCurrencyValue} = this.props.converter;
 
-    const {currentCurrency: listActiveCurrent, convertedCurrency: listActiveConverted } = this.state.listActive;
+    const {activeList} = this.state;
     const {status: errorStatus} = this.state.error;
     const {onInputChange, fetchCurrenciesInfo, currencyListToggle} = this;
 
     const properties = {
-      onInputChange,
-      fetchCurrenciesInfo,
-      currencyListToggle,
-      currentCurrency,
-      currentCurrencyValue,
-      convertedCurrency,
-      convertedCurrencyValue,
-      listActiveCurrent,
-      listActiveConverted,
-      errorStatus
+      funcs:{onInputChange, fetchCurrenciesInfo, currencyListToggle},
+      converter:{
+        currentCurrency,
+        currentCurrencyValue,
+        convertedCurrency,
+        convertedCurrencyValue
+      },
+      errorStatus,
+      activeList
     }
 
     return converterView({...properties})
   }
-
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -131,8 +127,8 @@ const mapDispatchToProps = (dispatch) => {
   }, dispatch);
 }
 
-const mapStateToProps = ({currenciesInfo}) => {
-  return {currenciesInfo};
+const mapStateToProps = ({converter}) => {
+  return {converter};
 }
 
 export default withCurrencyPairService()(connect(mapStateToProps, mapDispatchToProps)(Converter));

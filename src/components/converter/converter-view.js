@@ -6,18 +6,13 @@ import React from "react";
 import "./converter.scss";
 import ErrorBoundary from "../error-boundary";
 
-const converterView = ({
-                         onInputChange,
-                         fetchCurrenciesInfo,
-                         currencyListToggle,
-                         currentCurrency,
-                         currentCurrencyValue,
-                         convertedCurrency,
-                         convertedCurrencyValue,
-                         listActiveCurrent,
-                         listActiveConverted,
-                         errorStatus
-                       }) => {
+const converterView = (props) => {
+
+  const {
+    funcs: {onInputChange, fetchCurrenciesInfo, currencyListToggle}, converter: {currentCurrency, currentCurrencyValue, convertedCurrency, convertedCurrencyValue},
+    activeList,
+    errorStatus
+  } = props;
 
   let component;
 
@@ -38,7 +33,7 @@ const converterView = ({
             type='currentCurrency'
             fetch={fetchCurrenciesInfo}
             currencyListToggle={currencyListToggle}
-            activeStatus={listActiveCurrent}/>
+            activeStatus={activeList.currentCurrency}/>
         </div>
 
         <div className="converter__currency-block">
@@ -52,7 +47,7 @@ const converterView = ({
             type='convertedCurrency'
             fetch={fetchCurrenciesInfo}
             currencyListToggle={currencyListToggle}
-            activeStatus={listActiveConverted}/>
+            activeStatus={activeList.convertedCurrency}/>
         </div>
       </div>
   }

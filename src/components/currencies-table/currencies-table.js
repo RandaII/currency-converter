@@ -13,7 +13,7 @@ class CurrenciesTable extends Component {
     choicesCurrencyInTable: PropTypes.func.isRequired,
     currencyList: PropTypes.array.isRequired,
     currencyPairService: PropTypes.object.isRequired,
-    currencyTable: PropTypes.shape({
+    currenciesTable: PropTypes.shape({
       currentCurrency: PropTypes.string.isRequired,
       values: PropTypes.object.isRequired
     })
@@ -53,7 +53,7 @@ class CurrenciesTable extends Component {
   }
 
   addAllCourses = async () => {
-    const {currencyPairService, currencyList, currencyTable: {currentCurrency}, addCurrenciesValues} = this.props;
+    const {currencyPairService, currencyList, currenciesTable: {currentCurrency}, addCurrenciesValues} = this.props;
 
     this.setState({isLoading: true});
 
@@ -78,7 +78,7 @@ class CurrenciesTable extends Component {
 
   render() {
 
-    const {currencyList, currencyTable: {currentCurrency, values: currenciesValue}} = this.props;
+    const {currencyList, currenciesTable: {currentCurrency, values: currenciesValue}} = this.props;
     const {activeStatus, isLoading, error: {status: error}} = this.state;
     const {firstMount, toggle, sendCurrency} = this;
 
@@ -97,8 +97,8 @@ class CurrenciesTable extends Component {
   }
 }
 
-const mapStateToProps = ({currencyList, currencyTable}) => {
-  return {currencyList, currencyTable}
+const mapStateToProps = ({currencyList, currenciesTable}) => {
+  return {currencyList, currenciesTable}
 }
 
 const mapDispatchToProps = (dispatch) => {
