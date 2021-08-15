@@ -16,6 +16,7 @@ const converterView = (props) => {
 
   let component;
 
+  // в зависимости от статуса, показываем нужный компонент
   if (errorStatus) {
     component = <ErrorIndicator/>;
   } else {

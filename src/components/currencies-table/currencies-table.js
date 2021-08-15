@@ -19,6 +19,7 @@ class CurrenciesTable extends Component {
     })
   };
 
+  // необходим для корректного отображения стилей
   firstMount = true;
 
   state = {
@@ -31,18 +32,21 @@ class CurrenciesTable extends Component {
   }
 
   toggle = () => {
+    // переключатель для currency-list
     this.setState(({activeStatus}) => {
       return {activeStatus: !activeStatus}
     });
   }
 
   sendCurrency = async ({target: {textContent}}) => {
+    // закрываем модальное окно, отправляем в store выбранную валюту, получаем обновленные данные
     this.toggle();
     await this.props.choicesCurrencyInTable(textContent);
     await this.addAllCourses();
   }
 
   onError = ({message}) => {
+    // функция, запускаемая при ошибке, также переводим статус загрузки в false
     this.setState({
       error: {
         status: true,
@@ -55,6 +59,7 @@ class CurrenciesTable extends Component {
   addAllCourses = async () => {
     const {currencyPairService, currencyList, currenciesTable: {currentCurrency}, addCurrenciesValues} = this.props;
 
+    // при получении данных, выводим блок загрузки, после выключаем
     this.setState({isLoading: true});
 
     await currencyPairService.getAllCourse(currentCurrency, currencyList)
@@ -71,6 +76,7 @@ class CurrenciesTable extends Component {
   }
 
   async componentDidMount() {
+    // получаем данные и назначаем listener
     await this.addAllCourses();
     document.addEventListener(`mousedown`, this.backgroundsListener)
     this.firstMount = false;

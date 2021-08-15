@@ -38,15 +38,17 @@ export default class CurrencyPairService  {
 
   async getAllCourse(currency, list){
 
+    // составляем пары
     let pairs = list.reduce((pairs, currentValue,) => pairs += `${currency}${currentValue},`
     , ``);
 
     return fetch(this.#path +pairs + this.#key)
       .then((response) => response.json())
       .then((result) =>{
-
+        // проверяем статус ответа, если необходимо вызываем ошибку
         this._errorHandler(result);
 
+        // округляем полученные значения и возвращаем их
         for (let key in result.data){
           result.data[key] = returnRoundValue(Number(result.data[key]));
         }

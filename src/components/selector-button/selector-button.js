@@ -6,6 +6,7 @@ import "./selector-button.scss";
 
 const SelectorButton = ({activeStatus, dataType, onClick, children}) =>{
 
+  // в зависимости от статуса, добавляем класс
   let buttonClassname = `selected-currency-button`;
   buttonClassname += (activeStatus) ? ` active` : ``;
 

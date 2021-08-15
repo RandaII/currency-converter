@@ -22,12 +22,13 @@ class CurrenciesSelection extends Component{
     activeStatus: PropTypes.bool.isRequired
   };
 
+  // для того, что-бы задать первоначальный класс
   firstMount = true;
 
   toggle = () => this.props.currencyListToggle(this.props.type);
 
   sendCurrency = async ({target: {textContent: value}}) => {
-
+    // отправляем выбранную валюту, получаем обновленные данные для новой валютной пары и закрываем модальное окно
     const {changeCurrency, type, fetch, currencyListToggle} = this.props;
 
     await changeCurrency({type, value});
@@ -41,6 +42,7 @@ class CurrenciesSelection extends Component{
 
     let currencyListClasses = `currency-list `;
 
+    // в зависимости от статуса, назначаем необходимый класс, для компонента
     if (activeStatus) {
       currencyListClasses += `currency-list--show`;
     } else if (!activeStatus && firstMount) {

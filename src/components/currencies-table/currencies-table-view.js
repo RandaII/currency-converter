@@ -32,6 +32,7 @@ const currenciesTableView = ({
 
   let currencyListClasses = `currency-list `;
 
+  // задаем нужный класс
   if (activeStatus) {
     currencyListClasses += `currency-list--show`;
   } else if (!activeStatus && firstMount) {

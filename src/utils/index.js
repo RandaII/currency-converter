@@ -24,6 +24,7 @@ const returnCheckedValue = (value) =>{
 }
 
 const returnRoundValue = (value) =>{
+  // функция для возврата округленного значения
   if (value >= 0.1){
     return +value.toFixed(2);
   }
@@ -58,6 +59,7 @@ const returnAnotherCurrencyType = (value) => {
   else return [`currentCurrencyValue`, `reverseExchangeRate`];
 }
 
+// функция для возрата сконвертированного значения
 const returnConvertedValue =
   (value, state, convertedCurrency) =>
     value ? returnRoundValue(+value * state[convertedCurrency]) : ``;

@@ -25,45 +25,52 @@ class Converter extends Component {
 
   state = {
     activeList: {
-      currentCurrency:false,
+      currentCurrency: false,
       convertedCurrency: false
     },
-    error:{
+    error: {
       status: false,
       message: null
     }
   }
 
+
   currencyListToggle = async (type) => {
+    // переключатель currency-list
 
-      let anotherType = (type === `currentCurrency`) ? `convertedCurrency` : `currentCurrency`;
+    // получаем тип другого currency-list
+    let anotherType = (type === `currentCurrency`) ? `convertedCurrency` : `currentCurrency`;
 
-      await this.setState((state) => {
-        return {activeList:{
-            [type]: !state.activeList[type],
-            [anotherType]: false
-          }}
-      });
+    // меняем состояние текущего currency-list на противоположное, для другого currency-list, состояние ставим в false
+    await this.setState((state) => {
+      return {
+        activeList: {
+          [type]: !state.activeList[type],
+          [anotherType]: false
+        }
+      }
+    });
   }
 
-  backgroundClickListener = ({target}) =>{
-
+  backgroundClickListener = ({target}) => {
+    // функция отслеживает клики, при любом активном currency-list, при клике, вне окна, меняет состояние на false
     const {currentCurrency, convertedCurrency} = this.state.activeList;
     const attribute = target.getAttribute(`data-element-type`);
 
-    if ((currentCurrency || convertedCurrency) && attribute !== `currency-converter-item`){
-        this.setState({
-          activeList:{
-            currentCurrency:false,
-            convertedCurrency: false
-          }
-        });
+    if ((currentCurrency || convertedCurrency) && attribute !== `currency-converter-item`) {
+      this.setState({
+        activeList: {
+          currentCurrency: false,
+          convertedCurrency: false
+        }
+      });
     }
   }
 
-  onError = ({message}) =>{
+  onError = ({message}) => {
+    // функция вызываемая при возникновении ошибки
     this.setState({
-      error:{
+      error: {
         status: true,
         message
       }
@@ -71,6 +78,7 @@ class Converter extends Component {
   }
 
   fetchCurrenciesInfo = async () => {
+    // получение информации по валютной паре, и отправка ее в store
     const {
       currencyPairService,
       fetchPairValue,
@@ -90,9 +98,11 @@ class Converter extends Component {
       .catch(this.onError);
   }
 
+  // при вводе в input-field, отправляем новое значение в store
   onInputChange = (value) => this.props.addCurrencyValue(value);
 
   async componentDidMount() {
+    // получаем текущий курс и добавляем listener на клик
     await this.fetchCurrenciesInfo();
     document.addEventListener(`click`, this.backgroundClickListener);
   }
@@ -105,8 +115,8 @@ class Converter extends Component {
     const {onInputChange, fetchCurrenciesInfo, currencyListToggle} = this;
 
     const properties = {
-      funcs:{onInputChange, fetchCurrenciesInfo, currencyListToggle},
-      converter:{
+      funcs: {onInputChange, fetchCurrenciesInfo, currencyListToggle},
+      converter: {
         currentCurrency,
         currentCurrencyValue,
         convertedCurrency,

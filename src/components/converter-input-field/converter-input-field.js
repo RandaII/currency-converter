@@ -7,13 +7,13 @@ import "./converter-input-field.scss"
 const ConverterInputField = ({onInputChange, type, currencyValue}) => {
 
   const onchange = ({target: {value}}) => {
-
     onInputChange({
       type,
       value: returnCheckedValue(value) //проверяем поступившее значение и присваеваем
     });
   }
 
+  // очистка input
   const clearInput = () => onInputChange({
     type,
     value: ``

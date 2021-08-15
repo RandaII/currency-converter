@@ -1,4 +1,3 @@
-
 const initialState = {
   values:{},
   currentCurrency: `USD`
