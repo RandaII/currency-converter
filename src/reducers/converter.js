@@ -1,46 +1,75 @@
 import {returnRoundValue, returnAnotherCurrencyType, returnConvertedValue} from "../utils";
 
 const initialState = {
-  currentCurrency: `USD`,
-  convertedCurrency: `RUB`,
-  currentCurrencyValue: 1,
-  convertedCurrencyValue: ``,
-  exchangeRate: ``,
-  reverseExchangeRate: ``
+  current:{
+    currency: `USD`,
+    value: 1,
+    exchangeRate: ``
+  },
+  converted:{
+    currency: `RUB`,
+    value: ``,
+    exchangeRate: ``
+  },
+  activeList:{
+    current: false,
+    converted: false
+  }
 };
 
 const updateConverter = (state = initialState, action) => {
   switch (action.type) {
     case `FETCH_PAIR_VALUE`:
 
-      const {currentCurrencyValue} = state;
+      const {value: currentValue } = state.current;
 
       // вычисляем конвертируемое значение и округляем его
-      const convertedCurrencyValue = (currentCurrencyValue) ? returnRoundValue((currentCurrencyValue * action.payload[0])) : ``;
+      const convertedValue = (currentValue) ? returnRoundValue((currentValue * action.payload[0])) : ``;
 
       return {
         ...state,
-        exchangeRate: action.payload[0],
-        reverseExchangeRate: action.payload[1],
-        convertedCurrencyValue
+        current:{
+          ...state.current,
+          exchangeRate: action.payload[0]
+        },
+        converted:{
+          ...state.converted,
+          value: convertedValue,
+          exchangeRate: action.payload[1],
+        }
       }
     case `ADD_CURRENCY_VALUE`:
       const {type, value} = action.payload;
-      const [anotherType, anotherRate] = returnAnotherCurrencyType(type);
-
-
-      const convertedValue = returnConvertedValue(value, state, anotherRate);
+      const anotherType = returnAnotherCurrencyType(type);
+      const anotherValue = returnConvertedValue(value, state, type);
 
       return {
-          ...state,
-          [type]: (value) ? value : ``,
-          [anotherType]: convertedValue
+        ...state,
+        [type]: {
+          ...state[type],
+          value: (value) ? value : ``,
+        },
+        [anotherType]: {
+          ...state[anotherType],
+          value: anotherValue
         }
+      }
     case `CHANGE_CURRENCY`:
       return {
           ...state,
-          [action.payload.type]: action.payload.value
+          [action.payload.type]: {
+            ...state[action.payload.type],
+            currency: action.payload.value
+          }
         }
+    case `CHANGE_ACTIVE_LIST`:
+      return {
+        ...state,
+        activeList:{
+          ...state.activeList,
+          ...action.payload
+        }
+      }
     default: return state;
   }
 }

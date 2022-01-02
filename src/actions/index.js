@@ -34,10 +34,18 @@ const choicesCurrencyInTable = (value) =>{
   }
 }
 
+const changeActiveList = (value) =>{
+  return{
+    type: `CHANGE_ACTIVE_LIST`,
+    payload: value
+  }
+}
+
 export {
   fetchPairValue,
   addCurrencyValue,
   changeCurrency,
   addCurrenciesValues,
-  choicesCurrencyInTable
+  choicesCurrencyInTable,
+  changeActiveList
 }

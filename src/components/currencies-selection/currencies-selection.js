@@ -1,86 +1,42 @@
-import React, {Component} from 'react';
-import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
-import {changeCurrency} from "../../actions";
+import React from 'react';
 import SelectorButton from "../selector-button";
 import CurrencyList from "../currency-list";
 import PropTypes from "prop-types";
 import {PropTypesTemplates as Templates} from "../../utils";
+import {currenciesSelectionWithAnimation} from "../hoc";
 
 import "./currencies-selection.scss";
 
-class CurrenciesSelection extends Component{
-
-  static propTypes = {
-    currency: PropTypes.oneOf(Templates.currenciesArray).isRequired,
-    type: PropTypes.oneOf([
-      `currentCurrency`,
-      `convertedCurrency`]).isRequired,
-    fetch: PropTypes.func.isRequired,
-    changeCurrency: PropTypes.func.isRequired,
-    currencyListToggle: PropTypes.func.isRequired,
-    activeStatus: PropTypes.bool.isRequired
-  };
-
-  // для того, что-бы задать первоначальный класс
-  firstMount = true;
-
-  toggle = () => this.props.currencyListToggle(this.props.type);
-
-  sendCurrency = async ({target: {textContent: value}}) => {
-    // отправляем выбранную валюту, получаем обновленные данные для новой валютной пары и закрываем модальное окно
-    const {changeCurrency, type, fetch, currencyListToggle} = this.props;
-
-    await changeCurrency({type, value});
-    fetch();
-    currencyListToggle(type);
-  }
-
-  render(){
-    const {activeStatus, currency, currencyList} = this.props;
-    const {firstMount, toggle, sendCurrency} = this;
-
-    let currencyListClasses = `currency-list `;
-
-    // в зависимости от статуса, назначаем необходимый класс, для компонента
-    if (activeStatus) {
-      currencyListClasses += `currency-list--show`;
-    } else if (!activeStatus && firstMount) {
-      currencyListClasses += `currency-list--out-border`;
-      this.firstMount = false;
-    } else {
-      currencyListClasses += `currency-list--hide`;
-    }
-
-    return (
+const CurrenciesSelection = (
+  {dataType, toggle, classes, activeStatus, currency, currencyList, currencyListClickHandler}) =>(
       <div className="converter__currency-type-block">
-
         <SelectorButton
-          dataType="currency-converter-item"
+          dataType={dataType}
           onClick={toggle}
-          activeStatus={activeStatus}>
+          classNames={classes.selectorButton}>
           {currency}
         </SelectorButton>
 
+        {activeStatus &&
         <CurrencyList
-          currencyArray={currencyList}
-          className={currencyListClasses}
-          dataType="currency-converter-item"
-          onClick={sendCurrency}/>
+          dataType={dataType}
+          classNames={classes.currencyList}
+          onClick={currencyListClickHandler}>{currencyList}</CurrencyList>
+        }
+      </div>);
 
-      </div>
-    );
-  }
-}
 
-const mapStateToProps = ({currencyList}) => {
-  return {currencyList};
-}
+CurrenciesSelection.propTypes = {
+  dataType: PropTypes.string,
+  toggle: PropTypes.func.isRequired,
+  classes: PropTypes.shape({
+    currencyList: PropTypes.string.isRequired,
+    selectorButton: PropTypes.string.isRequired
+  }).isRequired,
+  activeStatus: PropTypes.bool.isRequired,
+  currency: PropTypes.oneOf(Templates.currenciesArray).isRequired,
+  currencyList: PropTypes.array.isRequired,
+  currencyListClickHandler: PropTypes.func
+};
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({
-    changeCurrency: changeCurrency
-  }, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CurrenciesSelection);
+export default  currenciesSelectionWithAnimation(CurrenciesSelection);

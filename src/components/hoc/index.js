@@ -1,3 +1,5 @@
-import withCurrencyPairService from "./with-currency-pair-service";
+import {currenciesSelectionWithAnimation} from "./currencies-selection-with-animation";
 
-export default withCurrencyPairService;
+export {
+  currenciesSelectionWithAnimation
+}

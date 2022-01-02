@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 const returnCheckedValue = (value) =>{
 
-  const numberRegExp = /^\.|^,|[^\d\.,]|[\.,]\d+[\.,]|([\.,]{2})/gm;
+  const numberRegExp = /^\.|^,|[^\d.,]|[.,]\d+[.,]|([.,]{2})/gm;
 
   // проверяем на ввод иных символов, кроме чисел, точки и запятой, в случае их присутствия, обрезаем строку до прежнего состояния
   if (numberRegExp.test(value)){
@@ -54,15 +54,15 @@ const PropTypesTemplates = {
 }
 
 const returnAnotherCurrencyType = (value) => {
-  if (value === `currentCurrencyValue`)
-    return [`convertedCurrencyValue`, `exchangeRate`];
-  else return [`currentCurrencyValue`, `reverseExchangeRate`];
+  if (value === `current`)
+    return `converted`;
+  return `current`;
 }
 
 // функция для возрата сконвертированного значения
 const returnConvertedValue =
-  (value, state, convertedCurrency) =>
-    value ? returnRoundValue(+value * state[convertedCurrency]) : ``;
+  (value, state, type) =>
+    value ? returnRoundValue(+value * state[type].exchangeRate) : ``;
 
 export {
   returnCheckedValue,

@@ -4,30 +4,22 @@ import {PropTypesTemplates as Templates} from "../../utils";
 
 import "./selector-button.scss";
 
-const SelectorButton = ({activeStatus, dataType, onClick, children}) =>{
-
-  // в зависимости от статуса, добавляем класс
-  let buttonClassname = `selected-currency-button`;
-  buttonClassname += (activeStatus) ? ` active` : ``;
-
-  return (
+const SelectorButton = ({dataType, onClick, children, classNames}) =>(
     <button
       data-element-type={dataType}
-      className={buttonClassname}
+      className={ `selected-currency-button ${classNames}`}
       onClick={onClick}
     >{children}
-      <i
-        className="fa--converter fa fa-angle-down"
+      <i className="fa--converter fa fa-angle-down"
          data-element-type={dataType}></i>
     </button>
-  )
-}
+  );
 
 SelectorButton.propTypes = {
-  activeStatus: PropTypes.bool.isRequired,
-  dataType: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-  children: PropTypes.oneOf(Templates.currenciesArray).isRequired
+  dataType: PropTypes.string,
+  classNames: PropTypes.string,
+  children: PropTypes.oneOf(Templates.currenciesArray).isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
 export default SelectorButton;

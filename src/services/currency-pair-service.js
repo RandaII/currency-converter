@@ -3,7 +3,8 @@ import {returnRoundValue} from "../utils";
 export default class CurrencyPairService  {
 
   #path = `https://currate.ru/api/?get=rates&pairs=`;
-  #key = `&key=5cfa0920d512aaf1ebb52c933bf209ce`;
+  // #key = `&key=5cfa0920d512aaf1ebb52c933bf209ce`;
+  #key = `&key=c2ce7bb0c7510d68824e52174a9e452a`;
 
   _errorHandler = (response) =>{
 

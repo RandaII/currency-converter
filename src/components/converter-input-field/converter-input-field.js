@@ -33,7 +33,7 @@ const ConverterInputField = ({onInputChange, type, currencyValue}) => {
 ConverterInputField.propTypes = {
   onInputChange: PropTypes.func.isRequired,
   currencyValue: PropTypes.oneOfType(Templates.stringWithNumber).isRequired,
-  type: PropTypes.oneOf([`currentCurrencyValue`, `convertedCurrencyValue`]).isRequired
+  type: PropTypes.oneOf([`current`, `converted`]).isRequired
 }
 
 export default ConverterInputField;
