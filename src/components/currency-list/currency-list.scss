@@ -27,18 +27,16 @@
     transition: $defaultTransition;
     margin-top: -1px;
 
-    &:hover{
+    &:hover, &:focus{
       border-color: $activeColor;
       color: $activeColor;
       z-index: 50;
+      outline: none;
     }
   }
 
   &--show{
     animation: showBlock $defaultTransition forwards ;
-  }
-  &--out-border{
-    transform: translateX(-500px);
   }
   &--hide{
     animation: hideBlock $defaultTransition forwards,

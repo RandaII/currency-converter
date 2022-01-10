@@ -37,5 +37,9 @@
       position: relative;
       right: 1px;
     }
+    &:focus{
+      z-index: 1000;
+      color: $activeColor;
+    }
   }
 }

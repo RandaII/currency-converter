@@ -32,10 +32,10 @@ class CurrenciesTable extends Component {
     }
   }
 
-  // переключатель для currency-list
+  // переключатель activeStatus для currency-list
   toggle = () => this.setState({activeStatus: !this.state.activeStatus});
 
-  // закрываем модальное окно, отправляем в store выбранную валюту, получаем обновленные данные
+  // отправляем в store выбранную валюту, получаем обновленные данные
   sendCurrency = async ({target: {textContent}}) => {
     await this.props.choicesCurrencyInTable(textContent);
     await this.addAllCourses();
@@ -65,9 +65,10 @@ class CurrenciesTable extends Component {
     this.setState({isLoading: false});
   }
 
+  // при клике по бэкграунду переводим activeStatus в false
   backgroundsListener = () => this.setState({activeStatus: false});
 
-  // получаем данные и назначаем listener
+  // получаем данные после монтирования
   async componentDidMount() {await this.addAllCourses();}
 
   render() {
@@ -75,6 +76,7 @@ class CurrenciesTable extends Component {
     const {currencyList, currenciesTable: {currentCurrency, values: currenciesValue}} = this.props;
     const {activeStatus, isLoading, error: {status: error}} = this.state;
 
+    // выводим все айтемы, кроме выбранной валюты
     let items = currencyList.map((item, i) => {
       if (item !== currentCurrency) {
         let pair = currentCurrency + item;
@@ -96,26 +98,28 @@ class CurrenciesTable extends Component {
       <tbody>{items}</tbody>
     </table>;
 
+    const spinnerStyle = {
+      width: `350px`,
+      height: `160px`,
+      border: `1px solid #bdbcbc`,
+      position: `relative`};
+
     return (
       <ErrorBoundary>
         <div className="currency-table__component">
-          <div className="currency-table__wrapper">
-            {(!error && !isLoading) && currencyTable}
-            {isLoading && <Spinner/>}
-            {error && <ErrorIndicator/>}
-          </div>
+          {(!error && !isLoading) &&
+            <div className="currency-table__wrapper">{currencyTable}</div>}
+          {isLoading && <Spinner>{spinnerStyle}</Spinner>}
+          {error && <ErrorIndicator/>}
 
-          <div>
-            <CurrenciesSelection
-              dataType="currency-table-item"
-              toggleHandler={this.toggle}
-              activeStatus={activeStatus}
-              currency={currentCurrency}
-              currencyList={currencyList}
-              currencyListClickHandler={this.sendCurrency}
-              bgcCallback={this.backgroundsListener}/>
-          </div>
-
+          <CurrenciesSelection
+            dataType="currency-table-item"
+            toggleHandler={this.toggle}
+            activeStatus={activeStatus}
+            currency={currentCurrency}
+            currencyList={currencyList}
+            currencyListClickHandler={this.sendCurrency}
+            bgcCallback={this.backgroundsListener}/>
         </div>
       </ErrorBoundary>
     );

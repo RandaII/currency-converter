@@ -5,6 +5,7 @@
   color: $fontColor;
   max-width: $maxBlockWidth;
   width: 100%;
+  border: $bdStyle;
   border-collapse: collapse;
 
   &__row{

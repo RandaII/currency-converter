@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 import {addCurrencyValue, changeActiveList, changeCurrency} from "../../actions";
 import PropTypes from "prop-types";
 import "./converter-row.scss";
-import {PropTypesTemplates as Templates} from "../../utils";
+import {PropTypesTemplates as Templates, returnAnotherCurrencyType} from "../../utils";
 
 class ConverterRow extends Component{
 
@@ -40,13 +40,11 @@ class ConverterRow extends Component{
     const {type, converter:{activeList}, changeActiveList} = this.props;
 
     // получаем тип другого currency-list
-    let anotherType = (type === `current`) ? `converted` : `current`;
+    let anotherType = returnAnotherCurrencyType(type);
 
     // меняем состояние текущего currency-list на противоположное, для другого currency-list, состояние ставим в false
 
-    let payload = {
-      [type]: !activeList[type]
-    };
+    let payload = { [type]: !activeList[type] };
 
     if (activeList[anotherType]){
       payload[anotherType] = false;
@@ -56,15 +54,15 @@ class ConverterRow extends Component{
   }
 
   // listener отслеживает клики, при любом активном currency-list, при клике, вне окна, меняет состояние на false
-  backgroundClickCallback = () => {
+  backgroundClickCallback = () =>
     this.props.changeActiveList({
       current: false,
       converted: false
     });
-  }
 
+  // отправляем выбранную валюту, получаем обновленные данные для новой валютной пары
   sendCurrency = async ({target: {textContent: value}}) => {
-    // отправляем выбранную валюту, получаем обновленные данные для новой валютной пары и закрываем модальное окно
+
     const {changeCurrency, type, fetch} = this.props;
 
     await changeCurrency({type, value});
@@ -93,8 +91,7 @@ class ConverterRow extends Component{
           currency={converter[type].currency}
           currencyList={currencyList}
           currencyListClickHandler={this.sendCurrency}
-          bgcCallback={this.backgroundClickCallback}
-        />
+          bgcCallback={this.backgroundClickCallback}/>
       </div>
     );
   }

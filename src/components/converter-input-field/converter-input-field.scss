@@ -24,6 +24,7 @@
 
     &:focus {
       border-color: $activeColor;
+      z-index: 10000;
     }
   }
 }
@@ -40,7 +41,8 @@
   opacity: .7;
   transition: $defaultTransition;
 
-  &:hover{
+  &:hover, &:focus{
+    outline: none;
     color: $activeColor;
   }
 }

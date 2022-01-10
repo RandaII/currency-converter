@@ -46,8 +46,8 @@ class Converter extends Component {
     });
   }
 
+  // получение информации по валютной паре, и отправка ее в store
   fetchCurrenciesInfo = async () => {
-    // получение информации по валютной паре, и отправка ее в store
     const {
       currencyPairService,
       fetchPairValue,
@@ -72,35 +72,28 @@ class Converter extends Component {
 
   render() {
 
-    const {fetchCurrenciesInfo} = this;
     const {status: errorStatus} = this.state.error;
 
     // в зависимости от статуса, показываем нужный компонент
      const component =
-        <>
-        {(errorStatus && <ErrorIndicator/>) ||
+        <>{(errorStatus && <ErrorIndicator/>) ||
 
           <div className="converter__wrapper">
             <ConverterRow
               type="current"
-              fetch={fetchCurrenciesInfo}>
-            </ConverterRow>
+              fetch={this.fetchCurrenciesInfo}/>
 
             <ConverterRow
               type="converted"
-              fetch={fetchCurrenciesInfo}>
-            </ConverterRow>
+              fetch={this.fetchCurrenciesInfo}/>
           </div>
-        }
-        </>
+
+          }</>
 
     return (
       <ErrorBoundary>
-        <main className="converter">
-          {component}
-        </main>
-      </ErrorBoundary>
-    );
+        <main className="converter">{component}</main>
+      </ErrorBoundary>);
   }
 }
 

@@ -3,7 +3,6 @@
 
 .selected-currency-button{
   position: relative;
-  right: 1px;
   font-family: $mainFont;
   font-size: 18px;
   font-weight: 400;
@@ -20,6 +19,7 @@
   margin: 0;
   transition: $defaultTransition;
   cursor: pointer;
+  border-left-color: transparent;
 
   &.active{
     color: $activeColor;
@@ -27,6 +27,13 @@
     i{
       transform: rotate(180deg);
     }
+  }
+  
+  &:hover, &:focus{
+    outline: none;
+    border-color: $activeColor;
+    color: $activeColor;
+    z-index: 1000;
   }
 
   i{

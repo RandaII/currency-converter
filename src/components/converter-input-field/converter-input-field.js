@@ -19,13 +19,17 @@ const ConverterInputField = ({onInputChange, type, currencyValue}) => {
     value: ``
   });
 
+  const clearInputOnKeyDown = ({key}) =>{
+    if (key === `Enter`){clearInput();}
+  }
+
   return (
     <div className="converter__input-block">
       <input type="text"
              value={currencyValue}
              onChange={onchange}
              maxLength={15}/>
-      <span onClick={clearInput} className="converter__input-clear">&#215;</span>
+      <span onClick={clearInput} onKeyDown={clearInputOnKeyDown} className="converter__input-clear" tabIndex="0">&#215;</span>
     </div>
   )
 }

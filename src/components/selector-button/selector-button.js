@@ -8,12 +8,11 @@ const SelectorButton = ({dataType, onClick, children, classNames}) =>(
     <button
       data-element-type={dataType}
       className={ `selected-currency-button ${classNames}`}
-      onClick={onClick}
-    >{children}
+      onClick={onClick}>
+        {children}
       <i className="fa--converter fa fa-angle-down"
          data-element-type={dataType}></i>
-    </button>
-  );
+    </button>);
 
 SelectorButton.propTypes = {
   dataType: PropTypes.string,
