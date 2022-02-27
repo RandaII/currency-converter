@@ -3,11 +3,9 @@ import {returnRoundValue} from "../utils";
 export default class CurrencyPairService  {
 
   #path = `https://currate.ru/api/?get=rates&pairs=`;
-  // #key = `&key=5cfa0920d512aaf1ebb52c933bf209ce`;
   #key = `&key=c2ce7bb0c7510d68824e52174a9e452a`;
 
   _errorHandler = (response) =>{
-
     switch (response.status) {
       case `500`:
         throw new Error(`Misspelled request`);
@@ -18,30 +16,31 @@ export default class CurrencyPairService  {
     }
   }
 
-  async getCourse(pairArray){
+  // возвращает массив из двух значений следующего вида: [currentCurrencyValue, convertedCurrencyValue]
+  #formatResult = (values, pairsArray) => pairsArray.map(item => values[item]);
 
+  getCourse(pairArray){
+    // в случае если пара из одинаковых валют, возвращаем promise со значениями [1,1]
     if (pairArray[0] === pairArray[1]){
-      return [1,1];
+      return new Promise((resolve) => resolve([1,1]));
     }
 
-    const currencyPair =`${pairArray[0]},${pairArray[1]}`;
+    const currencyPairs =`${pairArray[0]},${pairArray[1]}`;
 
     // получаем адрес путем конкатенации пути, валютной пары и ключа
-    return fetch(this.#path + currencyPair + this.#key)
+    return fetch(this.#path + currencyPairs + this.#key)
       .then((response) => response.json())
       // преобразуем полученый курс в пару массив, перед этим проверяя на корректный ответ от сервера
       .then((result) =>{
         this._errorHandler(result);
-        return formatString(result.data, pairArray)
+        return this.#formatResult(result.data, pairArray)
       })
       .catch((err) => {throw err})
   }
 
-  async getAllCourse(currency, list){
-
+  getAllCourses(currency, list){
     // составляем пары
-    let pairs = list.reduce((pairs, currentValue,) => pairs += `${currency}${currentValue},`
-    , ``);
+    let pairs = list.reduce((pairs, currentValue,) => pairs += `${currency}${currentValue},`, ``);
 
     return fetch(this.#path +pairs + this.#key)
       .then((response) => response.json())
@@ -55,16 +54,6 @@ export default class CurrencyPairService  {
         }
         return result.data;
       })
-      .catch((err) =>{
-        throw err;
-      });
+      .catch((err) =>{throw err});
   }
-}
-
-const formatString = (value, pair) =>{
-  const arr = [];
-  pair.forEach((item) =>{
-    arr.push(returnRoundValue(Number(value[item])));
-  })
-  return arr;
 }

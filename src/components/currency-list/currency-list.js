@@ -3,14 +3,12 @@ import PropTypes from "prop-types";
 
 import "./currency-list.scss";
 
-const CurrencyList = ({children, classNames, dataType, onClick}) => {
+const CurrencyList = ({children, classNames = "", dataType = "", onClick = () =>{}}) => {
+  // общий handler для ввода с клавиатуры/мыши, в случае соответствия dataType
   const handler = (evt) =>{
     if (evt.target.dataset.elementType === dataType){
-      if (evt.type === `keydown` && evt.key === `Enter`){
-        onClick(evt);
-      }
-      else if(evt.type === `click`){
-        onClick(evt);
+      if (evt.key === `Enter` || evt.type === `click`){
+        onClick(evt.target.dataset.elementValue);
       }
     }
   }
@@ -20,6 +18,7 @@ const CurrencyList = ({children, classNames, dataType, onClick}) => {
         <li className="currency-list-item"
             key={index}
             data-element-type={dataType}
+            data-element-value={value}
             tabIndex="0">{value}
         </li>)}
     </ul>);

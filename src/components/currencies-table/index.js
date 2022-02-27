@@ -1,3 +1,3 @@
-import CurrenciesList from './currencies-table';
+import CurrenciesTable from './currencies-table';
 
-export default CurrenciesList;
+export default CurrenciesTable;

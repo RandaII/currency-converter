@@ -7,13 +7,7 @@ import store from "./store";
 
 ReactDOM.render(
   <Provider store={store}>
-    {/*Error Boundary*/}
-    {/*  <CurrencyPairServiceProvider value={currencyPairService}>*/}
-        {/* Router */}
-          <App></App>
-        {/* Router */}
-      {/*</CurrencyPairServiceProvider>*/}
-    {/*Error Boundary*/}
+    <App></App>
   </Provider>,
   document.getElementById('root')
 );

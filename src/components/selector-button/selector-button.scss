@@ -21,7 +21,7 @@
   cursor: pointer;
   border-left-color: transparent;
 
-  &.active{
+  &.entering, &.entered{
     color: $activeColor;
 
     i{

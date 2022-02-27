@@ -7,10 +7,16 @@ import "./converter-input-field.scss"
 const ConverterInputField = ({onInputChange, type, currencyValue}) => {
 
   const onchange = ({target: {value}}) => {
-    onInputChange({
-      type,
-      value: returnCheckedValue(value) //проверяем поступившее значение и присваеваем
-    });
+    //проверяем поступившее значение на недопустимые символы и делаем еще несколько проверок, после чего переприсваеваем
+    value = returnCheckedValue(value);
+
+    // в случае, если значение после проверки изменилось, отправляем его в store
+    if (value !== currencyValue){
+      onInputChange({
+        type,
+        value
+      });
+    }
   }
 
   // очистка input
@@ -19,6 +25,7 @@ const ConverterInputField = ({onInputChange, type, currencyValue}) => {
     value: ``
   });
 
+  // обработчик для управления с клавиатуры
   const clearInputOnKeyDown = ({key}) =>{
     if (key === `Enter`){clearInput();}
   }
@@ -31,13 +38,13 @@ const ConverterInputField = ({onInputChange, type, currencyValue}) => {
              maxLength={15}/>
       <span onClick={clearInput} onKeyDown={clearInputOnKeyDown} className="converter__input-clear" tabIndex="0">&#215;</span>
     </div>
-  )
+  );
 }
 
 ConverterInputField.propTypes = {
   onInputChange: PropTypes.func.isRequired,
   currencyValue: PropTypes.oneOfType(Templates.stringWithNumber).isRequired,
-  type: PropTypes.oneOf([`current`, `converted`]).isRequired
+  type: PropTypes.string.isRequired
 }
 
 export default ConverterInputField;

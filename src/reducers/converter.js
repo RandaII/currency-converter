@@ -1,4 +1,4 @@
-import {returnRoundValue, returnAnotherCurrencyType, returnConvertedValue} from "../utils";
+import {returnRoundValue, returnAnotherFieldType, returnConvertedValue} from "../utils";
 
 const initialState = {
   current:{
@@ -11,16 +11,17 @@ const initialState = {
     value: ``,
     exchangeRate: ``
   },
-  activeList:{
+  listsStatus:{
     current: false,
     converted: false
-  }
+  },
+  dataType: `currency-converter-item`
 };
 
 const updateConverter = (state = initialState, action) => {
   switch (action.type) {
+    // получение обменного курса для пары валют
     case `FETCH_PAIR_VALUE`:
-
       const {value: currentValue } = state.current;
 
       // вычисляем конвертируемое значение и округляем его
@@ -38,10 +39,11 @@ const updateConverter = (state = initialState, action) => {
           exchangeRate: action.payload[1],
         }
       }
+    // добавление нового значения для определенного поля и сконвертированного результата для другого поля
     case `ADD_CURRENCY_VALUE`:
       const {type, value} = action.payload;
-      const anotherType = returnAnotherCurrencyType(type);
-      const anotherValue = returnConvertedValue(value, state, type);
+      const anotherType = returnAnotherFieldType(type);
+      const anotherValue = returnConvertedValue(value, state[type].exchangeRate);
 
       return {
         ...state,
@@ -54,7 +56,8 @@ const updateConverter = (state = initialState, action) => {
           value: anotherValue
         }
       }
-    case `CHANGE_CURRENCY`:
+    // изменение валюты у определеннго поля
+    case `SET_CURRENCY`:
       return {
           ...state,
           [action.payload.type]: {
@@ -62,11 +65,12 @@ const updateConverter = (state = initialState, action) => {
             currency: action.payload.value
           }
         }
-    case `CHANGE_ACTIVE_LIST`:
+    // изменить статус активности у определенного списка
+    case `SET_LIST_STATUS`:
       return {
         ...state,
-        activeList:{
-          ...state.activeList,
+        listsStatus:{
+          ...state.listsStatus,
           ...action.payload
         }
       }

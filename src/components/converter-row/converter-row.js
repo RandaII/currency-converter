@@ -1,110 +1,104 @@
-import React, {Component} from "react";
+import React from "react";
+import {connect} from "react-redux";
+import PropTypes from "prop-types";
 import ConverterInputField from "../converter-input-field";
 import CurrenciesSelection from "../currencies-selection";
-import {bindActionCreators} from "redux";
-import {connect} from "react-redux";
-import {addCurrencyValue, changeActiveList, changeCurrency} from "../../actions";
-import PropTypes from "prop-types";
+import {addCurrencyValue, setListStatus, setCurrency} from "../../actions";
 import "./converter-row.scss";
-import {PropTypesTemplates as Templates, returnAnotherCurrencyType} from "../../utils";
+import {PropTypesTemplates as Templates, returnAnotherFieldType} from "../../utils";
 
-class ConverterRow extends Component{
-
-  static propTypes = {
-    addCurrencyValue: PropTypes.func.isRequired,
-    changeActiveList: PropTypes.func.isRequired,
-    changeCurrency: PropTypes.func.isRequired,
-    converter: PropTypes.shape({
-      converted: PropTypes.shape({
-        currency: PropTypes.oneOf(Templates.currenciesArray),
-        value: PropTypes.oneOfType(Templates.stringWithNumber),
-        exchangeRate: PropTypes.oneOfType(Templates.stringWithNumber)
-      }).isRequired,
-      current: PropTypes.shape({
-        currency: PropTypes.oneOf(Templates.currenciesArray),
-        value: PropTypes.oneOfType(Templates.stringWithNumber),
-        exchangeRate: PropTypes.oneOfType(Templates.stringWithNumber)
-      }).isRequired,
-      activeList: PropTypes.shape({
-        current: PropTypes.bool.isRequired,
-        converted: PropTypes.bool.isRequired
-      })
-    }),
-    fetch: PropTypes.func.isRequired,
-    currencyList: PropTypes.array.isRequired,
-    type: PropTypes.oneOf([`current`, `converted`])
-  }
+const ConverterRow  = (props) =>{
+  const {type, converter, setListStatus, setCurrency, fetch, addCurrencyValue, currencyList} = props;
 
   // переключатель currency-list
-  toggleHandler = async () => {
-    const {type, converter:{activeList}, changeActiveList} = this.props;
+  const toggleHandler = () => {
 
     // получаем тип другого currency-list
-    let anotherType = returnAnotherCurrencyType(type);
+    let anotherType = returnAnotherFieldType(type);
 
     // меняем состояние текущего currency-list на противоположное, для другого currency-list, состояние ставим в false
 
-    let payload = { [type]: !activeList[type] };
+    let payload = { [type]: !converter.listsStatus[type] };
 
-    if (activeList[anotherType]){
+    if (converter.listsStatus[anotherType]){
       payload[anotherType] = false;
     }
 
-    await changeActiveList(payload);
+    setListStatus(payload);
   }
 
-  // listener отслеживает клики, при любом активном currency-list, при клике, вне окна, меняет состояние на false
-  backgroundClickCallback = () =>
-    this.props.changeActiveList({
-      current: false,
-      converted: false
-    });
-
-  // отправляем выбранную валюту, получаем обновленные данные для новой валютной пары
-  sendCurrency = async ({target: {textContent: value}}) => {
-
-    const {changeCurrency, type, fetch} = this.props;
-
-    await changeCurrency({type, value});
-    fetch();
+  // отправляем выбранную валюту, получаем обновленные данные для новой валютной пары, скрываем currency-list
+  const sendCurrency = async (value) => {
+    await setCurrency({type, value});
+    await fetch();
+    toggleHandler();
   }
 
-  // при вводе в input-field, отправляем новое значение в store
-  onInputChange = (value) => this.props.addCurrencyValue(value);
+  // при вводе в input-field, функция отправит новое значение в store
+  const onInputChange = (value) => addCurrencyValue(value);
 
-  render() {
+  return (
+    <div className="converter__currency-block">
 
-    const {converter, type, currencyList} = this.props;
+      <ConverterInputField
+        onInputChange={onInputChange}
+        currencyValue={converter[type].value}
+        type={type}/>
 
-    return (
-      <div className="converter__currency-block">
-
-        <ConverterInputField
-          onInputChange={this.onInputChange}
-          currencyValue={converter[type].value}
-          type={type}/>
-
-        <CurrenciesSelection
-          dataType="currency-converter-item"
-          toggleHandler={this.toggleHandler}
-          activeStatus={converter.activeList[type]}
-          currency={converter[type].currency}
-          currencyList={currencyList}
-          currencyListClickHandler={this.sendCurrency}
-          bgcCallback={this.backgroundClickCallback}/>
-      </div>
-    );
-  }
+      <CurrenciesSelection
+        dataType={converter.dataType}
+        toggleHandler={toggleHandler}
+        activeStatus={converter.listsStatus[type]}
+        currency={converter[type].currency}
+        currencyList={currencyList}
+        currencyListClickHandler={sendCurrency}/>
+    </div>
+  );
 }
 
-const mapStateToProps = ({converter, currencyList}) =>{return {converter, currencyList};}
+ConverterRow.propTypes = {
+  addCurrencyValue: PropTypes.func.isRequired,
+  setListStatus: PropTypes.func.isRequired,
+  setCurrency: PropTypes.func.isRequired,
+  fetch: PropTypes.func.isRequired,
+  converter: PropTypes.shape({
+    converted: PropTypes.shape({
+      currency: PropTypes.oneOf(Templates.currenciesArray).isRequired,
+      value: PropTypes.oneOfType(Templates.stringWithNumber).isRequired
+    }).isRequired,
+    current: PropTypes.shape({
+      currency: PropTypes.oneOf(Templates.currenciesArray).isRequired,
+      value: PropTypes.oneOfType(Templates.stringWithNumber).isRequired
+    }).isRequired,
+    dataType: PropTypes.string.isRequired,
+    listsStatus: PropTypes.shape({
+      current: PropTypes.bool.isRequired,
+      converted: PropTypes.bool.isRequired,
+    }).isRequired
+  }).isRequired,
+  currencyList: PropTypes.array.isRequired,
+  type: PropTypes.string.isRequired
+};
 
-const mapDispatchToProps = (dispatch) =>{
-  return bindActionCreators({
+const mapStateToProps = ({converter, currencyList}) =>(
+  {converter:{
+      current:{
+        value: converter.current.value,
+        currency: converter.current.currency
+      },
+      converted:{
+        value: converter.converted.value,
+        currency: converter.converted.currency
+      },
+      dataType: converter.dataType,
+      listsStatus: converter.listsStatus
+    },
+  currencyList});
+
+const mapDispatchToProps ={
     addCurrencyValue,
-    changeActiveList,
-    changeCurrency
-  }, dispatch);
-}
+    setListStatus,
+    setCurrency
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConverterRow);

@@ -3,40 +3,47 @@ import SelectorButton from "../selector-button";
 import CurrencyList from "../currency-list";
 import PropTypes from "prop-types";
 import {PropTypesTemplates as Templates} from "../../utils";
-import {currenciesSelectionWithAnimation} from "../hoc";
+import {Transition} from "react-transition-group";
 
 import "./currencies-selection.scss";
-
+// компонет выбора валюты, передает пропсы и отвечает за анимацию вложенных компонентов
 const CurrenciesSelection = (
-  {dataType, toggle, classes, activeStatus, currency, currencyList, currencyListClickHandler}) =>(
-      <div className="converter__currency-type-block">
-        <SelectorButton
-          dataType={dataType}
-          onClick={toggle}
-          classNames={classes.selectorButton}>
-          {currency}
-        </SelectorButton>
+  {dataType, toggleHandler, activeStatus, currency, currencyList, currencyListClickHandler = () =>{}}) =>(
+    <div className="converter__currency-type-block">
+      <Transition
+        in={activeStatus}
+        timeout={200}>
+          {(state) =>(
+              <SelectorButton
+                dataType={dataType}
+                onClick={toggleHandler}
+                classNames={state}>
+                  {currency}
+              </SelectorButton>)}
+      </Transition>
 
-        {activeStatus &&
-        <CurrencyList
-          dataType={dataType}
-          classNames={classes.currencyList}
-          onClick={currencyListClickHandler}>{currencyList}</CurrencyList>
-        }
-      </div>);
-
+      <Transition
+        in={activeStatus}
+        timeout={200}
+        mountOnEnter
+        unmountOnExit>
+          {(state) =>(
+            <CurrencyList
+              dataType={dataType}
+              classNames={state}
+              onClick={currencyListClickHandler}>
+                {currencyList}
+            </CurrencyList>)}
+      </Transition>
+    </div>);
 
 CurrenciesSelection.propTypes = {
-  dataType: PropTypes.string,
-  toggle: PropTypes.func.isRequired,
-  classes: PropTypes.shape({
-    currencyList: PropTypes.string.isRequired,
-    selectorButton: PropTypes.string.isRequired
-  }).isRequired,
+  dataType: PropTypes.string.isRequired,
+  toggleHandler: PropTypes.func.isRequired,
   activeStatus: PropTypes.bool.isRequired,
   currency: PropTypes.oneOf(Templates.currenciesArray).isRequired,
   currencyList: PropTypes.array.isRequired,
   currencyListClickHandler: PropTypes.func
 };
 
-export default  currenciesSelectionWithAnimation(CurrenciesSelection);
+export default CurrenciesSelection;

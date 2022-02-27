@@ -1,6 +1,7 @@
 const initialState = {
   values:{},
-  currentCurrency: `USD`
+  currentCurrency: `USD`,
+  dataType: `currency-table-item`
 }
 
 const updateCurrenciesTable = (state = initialState, action) => {
@@ -10,7 +11,7 @@ const updateCurrenciesTable = (state = initialState, action) => {
         ...state,
         values: action.payload
       }
-    case `CHOICES_CURRENCY_IN_TABLE`:
+    case `SET_CURRENCY_IN_TABLE`:
       return {
         ...state,
         currentCurrency: action.payload

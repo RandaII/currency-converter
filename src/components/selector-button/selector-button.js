@@ -1,10 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {PropTypesTemplates as Templates} from "../../utils";
 
 import "./selector-button.scss";
 
-const SelectorButton = ({dataType, onClick, children, classNames}) =>(
+const SelectorButton = ({dataType = "", onClick, children, classNames = ""}) =>(
     <button
       data-element-type={dataType}
       className={ `selected-currency-button ${classNames}`}
@@ -17,7 +16,7 @@ const SelectorButton = ({dataType, onClick, children, classNames}) =>(
 SelectorButton.propTypes = {
   dataType: PropTypes.string,
   classNames: PropTypes.string,
-  children: PropTypes.oneOf(Templates.currenciesArray).isRequired,
+  children: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired
 };
 

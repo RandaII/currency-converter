@@ -4,8 +4,7 @@ import CurrenciesList from "../currencies-table";
 import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 import SwitchButtons from "../switch-buttons";
 
-const App = () => {
-  return (
+const App = () => (
     <Router>
       <div className="currencies-app">
         <SwitchButtons/>
@@ -17,6 +16,5 @@ const App = () => {
       </div>
     </Router>
   );
-}
 
 export default App;

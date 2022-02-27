@@ -35,10 +35,10 @@
     }
   }
 
-  &--show{
+  &.entering, &.entered{
     animation: showBlock $defaultTransition forwards ;
   }
-  &--hide{
+  &.exiting, &.exited{
     animation: hideBlock $defaultTransition forwards,
     translate $defaultTransition .2s forwards;
   }
