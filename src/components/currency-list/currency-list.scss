@@ -39,7 +39,6 @@
     animation: showBlock $defaultTransition forwards ;
   }
   &.exiting, &.exited{
-    animation: hideBlock $defaultTransition forwards,
-    translate $defaultTransition .2s forwards;
+    animation: hideBlock $defaultTransition forwards;
   }
 }

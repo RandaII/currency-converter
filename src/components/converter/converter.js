@@ -60,7 +60,7 @@ class Converter extends Component {
         this.props.setListStatus({
           current: false,
           converted: false
-        })
+        });
     // для проверки соблюдения условий, используется общий handler
     listDisablerHandler(evt, activeStatus, dataType, func);
   }

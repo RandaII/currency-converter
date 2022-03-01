@@ -14,11 +14,3 @@
     opacity: 0;
   }
 }
-@keyframes translate {
-  from{
-    transform: translateX(0);
-  }
-  100%{
-    transform: translateX(-500px);
-  }
-}
