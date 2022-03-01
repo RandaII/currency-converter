@@ -16,11 +16,12 @@
     background-color: #fff;
     border: $bdStyle;
     cursor: pointer;
-
+    overflow: hidden;
     text-align: center;
     line-height: $elHeight;
     text-decoration: none;
     color: $fontColor;
+    flex: 1 1;
 
     &:hover{
       transition: $defaultTransition;
