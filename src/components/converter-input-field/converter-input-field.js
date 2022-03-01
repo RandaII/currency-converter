@@ -20,14 +20,17 @@ const ConverterInputField = ({onInputChange, type, currencyValue}) => {
   }
 
   // очистка input
-  const clearInput = () => onInputChange({
-    type,
-    value: ``
-  });
+  const clearInput = (evt) => {
+    onInputChange({
+      type,
+      value: ``
+    });
+    evt.target.blur();
+  };
 
   // обработчик для управления с клавиатуры
-  const clearInputOnKeyDown = ({key}) =>{
-    if (key === `Enter`){clearInput();}
+  const clearInputOnKeyDown = (evt) =>{
+    if (evt.key === `Enter`){clearInput(evt);}
   }
 
   return (
