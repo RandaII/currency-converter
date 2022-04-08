@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {addCurrenciesValues, setCurrencyInTable} from "../../actions";
+import {addCurrenciesValues, setCurrencyInTable ,setTableStatuses} from "../../actions";
 import PropTypes from "prop-types";
 import ErrorBoundary from "../error-boundary";
 import Spinner from "../spinner";
@@ -15,24 +15,18 @@ class CurrenciesTable extends Component {
     addCurrenciesValues: PropTypes.func.isRequired,
     setCurrencyInTable: PropTypes.func.isRequired,
     currencyList: PropTypes.array.isRequired,
-    currencyPairService: PropTypes.object.isRequired,
     currenciesTable: PropTypes.shape({
       currentCurrency: PropTypes.string.isRequired,
       values: PropTypes.object.isRequired,
-      dataType: PropTypes.string.isRequired
+      dataType: PropTypes.string.isRequired,
+      activeStatus: PropTypes.bool.isRequired,
+      isLoading: PropTypes.bool.isRequired,
+      error: PropTypes.shape({
+        status: PropTypes.bool.isRequired,
+        message: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+      })
     })
   };
-
-  _INITIAL_STATE ={
-    activeStatus: false,
-    isLoading: true,
-    error: {
-      status: false,
-      message: null
-    }
-  };
-
-  state = {...this._INITIAL_STATE};
 
   // класс для переоформления спиннера
   spinnerClassname = `currencies-table`;
@@ -43,53 +37,25 @@ class CurrenciesTable extends Component {
   ];
 
   // переключатель activeStatus для currency-list
-  toggle = () => this.setState(({activeStatus}) =>({activeStatus: !activeStatus}));
+  toggle = () => this.props.setTableStatuses(!this.props.currenciesTable.activeStatus);
 
   // отправляем в store выбранную валюту, получаем обновленные данные
   sendCurrency = async (value) => {
     await this.props.setCurrencyInTable(value);
-    await this.addAllCourses();
-  }
-
-  // Error-handler, запускаемый при ошибке, также переводим статус загрузки в false
-  onError = (err) => {
-    this.setState({
-      error: {
-        status: true,
-        message: err.message
-      },
-      isLoading: false
-    });
-    throw err;
-  }
-
-  // добавления курсов валют
-  addAllCourses = async () => {
-    const {currencyPairService, currencyList, currenciesTable: {currentCurrency}, addCurrenciesValues} = this.props;
-
-    // до начала получения данных, применяем initialState, после получения, отсылаем в store и переводим loading в false
-    this.setState({...this._INITIAL_STATE});
-
-    await currencyPairService.getAllCourses(currentCurrency, currencyList)
-      .then(addCurrenciesValues)
-      .catch(this.onError);
-
-    this.setState({isLoading: false});
+    this.props.addCurrenciesValues();
   }
 
   // listener отслеживает клики, при любом активном currency-list, при клике, вне окна, или же при смене фокуса на элемент без необходимого dataType, меняет состояние на false
   listDisabler = (evt) => {
-
-    const {activeStatus} = this.state;
-    const {dataType} = this.props.currenciesTable;
-    const func = () => this.setState({activeStatus: false});
+    const {dataType, activeStatus} = this.props.currenciesTable;
+    const func = () => this.props.setTableStatuses(false);
     // для проверки соблюдения условий, используется общий handler
     listDisablerHandler(evt, activeStatus, dataType, func);
   };
 
   // получаем данные после монтирования и назначаем обработчики
   componentDidMount() {
-    this.addAllCourses();
+    this.props.addCurrenciesValues();
     document.addEventListener(`click`, this.listDisabler);
     document.addEventListener(`keyup`, this.listDisabler);
   }
@@ -101,8 +67,8 @@ class CurrenciesTable extends Component {
 
   render() {
 
-    const {currencyList, currenciesTable: {currentCurrency, values: bodyValues, dataType}} = this.props;
-    const {activeStatus, isLoading, error: {status: error}} = this.state;
+    const {currencyList, currenciesTable: {currentCurrency, values: bodyValues, dataType, activeStatus, isLoading, error: {status: error}}} = this.props;
+
     // data для построения таблицы
     const tableData = {
       headerValues: this.tableHeaderValues,
@@ -137,11 +103,12 @@ class CurrenciesTable extends Component {
   }
 }
 
-const mapStateToProps = ({currencyList, currenciesTable, currencyPairService}) => ({currencyList, currenciesTable, currencyPairService})
+const mapStateToProps = ({currencyList, currenciesTable}) => ({currencyList, currenciesTable})
 
 const mapDispatchToProps ={
     addCurrenciesValues,
-    setCurrencyInTable
+    setCurrencyInTable,
+    setTableStatuses
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CurrenciesTable);

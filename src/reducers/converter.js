@@ -15,7 +15,11 @@ const initialState = {
     current: false,
     converted: false
   },
-  dataType: `currency-converter-item`
+  dataType: `currency-converter-item`,
+  error: {
+    status: false,
+    message: null
+  }
 };
 
 const updateConverter = (state = initialState, action) => {
@@ -73,6 +77,12 @@ const updateConverter = (state = initialState, action) => {
           ...state.listsStatus,
           ...action.payload
         }
+      }
+    // установить error
+    case `SET_CONVERTER_ERROR`:
+      return {
+        ...state,
+        ...action.payload
       }
     default: return state;
   }

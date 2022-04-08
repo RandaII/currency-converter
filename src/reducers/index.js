@@ -1,6 +1,5 @@
 import updateConverter from "./converter";
 import updateCurrenciesTable from "./currencies-table";
-import CurrencyPairService from "../services/currency-pair-service";
 
 const initialState = {
   currencyList: [
@@ -10,15 +9,13 @@ const initialState = {
     `GBP`,
     `BYN`
   ],
-  currencyPairService: new CurrencyPairService()
 };
 
-const reducer = (state = initialState, action) => {
-  return{
+const reducer = (state = initialState, action) =>
+  ({
     ...state,
     converter: updateConverter(state.converter, action),
     currenciesTable: updateCurrenciesTable(state.currenciesTable, action)
-  }
-}
+  });
 
 export default reducer;

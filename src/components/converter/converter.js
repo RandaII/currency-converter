@@ -21,30 +21,18 @@ class Converter extends Component {
       listsStatus: PropTypes.shape({
         current: PropTypes.bool.isRequired,
         converted: PropTypes.bool.isRequired,
-      }).isRequired
+      }).isRequired,
+      error: PropTypes.shape({
+        status: PropTypes.bool.isRequired,
+        message: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.string
+        ])
+      })
     }),
-    currencyPairService: PropTypes.object.isRequired,
     fetchPairValue: PropTypes.func.isRequired,
     setListStatus: PropTypes.func.isRequired
   };
-
-  state = {
-    error: {
-      status: false,
-      message: null
-    }
-  }
-
-  // функция вызываемая при возникновении ошибки
-  onError = (err) => {
-    this.setState({
-      error: {
-        status: true,
-        message: err.message
-      }
-    });
-    throw err;
-  }
 
   // Типы для row компонентов
   rowTypes = [
@@ -65,30 +53,9 @@ class Converter extends Component {
     listDisablerHandler(evt, activeStatus, dataType, func);
   }
 
-  // получение data по валютной паре, и отправка ее в store
-  fetchCurrenciesInfo = async () => {
-    const {
-      currencyPairService,
-      fetchPairValue,
-      converter: {
-        current:{currency: currentCurrency},
-        converted:{currency: convertedCurrency}
-      }
-    } = this.props;
-
-    // образуем ключи текущей пары
-    const pair = [currentCurrency + convertedCurrency, convertedCurrency + currentCurrency];
-
-    // получаем курс текущей пары
-    currencyPairService.getCourse(pair)
-      // отправляем значение в store
-      .then(fetchPairValue)
-      .catch(this.onError);
-  }
-
   // после монтирования получаем текущий курс и назначаем обработчики
   componentDidMount() {
-    this.fetchCurrenciesInfo();
+    this.props.fetchPairValue();
     document.addEventListener(`click`, this.listDisabler);
     document.addEventListener(`keyup`, this.listDisabler);
   }
@@ -100,7 +67,7 @@ class Converter extends Component {
 
   render() {
 
-    const {status: errorStatus} = this.state.error;
+    const {status: errorStatus} = this.props.converter.error;
 
     // в зависимости от статуса, показываем нужный компонент
     return (
@@ -108,19 +75,20 @@ class Converter extends Component {
         {(errorStatus && <ErrorIndicator/>) ||
         <ConverterView
           rowTypes={this.rowTypes}
-          fetch={this.fetchCurrenciesInfo}/>}
+          fetch={this.props.fetchPairValue}/>}
       </ErrorBoundary>);
   }
 }
 
 const mapDispatchToProps = {fetchPairValue, setListStatus};
 
-const mapStateToProps = ({converter, currencyPairService}) => ({converter:{
+const mapStateToProps = ({converter}) => ({
+  converter:{
     current: {currency:converter.current.currency},
     converted: {currency:converter.converted.currency},
     dataType: converter.dataType,
-    listsStatus: converter.listsStatus
-  },
-  currencyPairService});
+    listsStatus: converter.listsStatus,
+    error: converter.error
+  }});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Converter);
